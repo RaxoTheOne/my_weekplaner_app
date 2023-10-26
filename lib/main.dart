@@ -17,8 +17,8 @@ class MyApp extends StatelessWidget {
             onPressed: () async {
               final DateTimeRange? picked = await showDateRangePicker(
                 context: context,
-                firstDate: DateTime(2021),
-                lastDate: DateTime(2022),
+                firstDate: DateTime(2023),
+                lastDate: DateTime(2024),
               );
               // ignore: avoid_print
               if (picked != null) print(picked);
