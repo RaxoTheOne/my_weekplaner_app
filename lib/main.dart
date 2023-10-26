@@ -8,32 +8,22 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Wochenplaner',
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Wochenplaner'),
+          title: const Text('Kalender'),
         ),
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const Text(
-                'Hier ist Ihr Wochenplan:',
-                ),
-              Expanded(
-                child: GridView.count(
-                  crossAxisCount: 7,
-                  children: List.generate(30, (index) {
-                    return Center(
-                      child: Text(
-                        'Tag ${index + 1}',
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
-                    );
-                  }),
-                ),
-              ),
-            ],
+          child: ElevatedButton(
+            onPressed: () async {
+              final DateTimeRange? picked = await showDateRangePicker(
+                context: context,
+                firstDate: DateTime(2021),
+                lastDate: DateTime(2022),
+              );
+              // ignore: avoid_print
+              if (picked != null) print(picked);
+            },
+            child: const Text('Datum auswählen'),
           ),
         ),
       ),
