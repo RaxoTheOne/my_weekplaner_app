@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -23,11 +23,11 @@ class MyApp extends StatelessWidget {
               Expanded(
                 child: GridView.count(
                   crossAxisCount: 7,
-                  children: List.generate(28, (index) {
+                  children: List.generate(30, (index) {
                     return Center(
                       child: Text(
                         'Tag ${index + 1}',
-                        style: Theme.of(context).textTheme.headline5,
+                        style: Theme.of(context).textTheme.headlineSmall,
                       ),
                     );
                   }),
