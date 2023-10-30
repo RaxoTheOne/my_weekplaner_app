@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 void main() {
-  runApp(MeineApp());
+  runApp(const MeineApp());
 }
 
 class MeineApp extends StatelessWidget {
+  const MeineApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -13,13 +15,13 @@ class MeineApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MeinHomebildschirm(title: 'Home'),
+      home: const MeinHomebildschirm(title: 'Home'),
     );
   }
 }
 
 class MeinHomebildschirm extends StatefulWidget {
-  MeinHomebildschirm({Key? key, required this.title}) : super(key: key);
+  const MeinHomebildschirm({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -39,7 +41,7 @@ class _MeinHomebildschirmState extends State<MeinHomebildschirm> {
         title: Text(widget.title),
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/hintergrund.jpg'),
             fit: BoxFit.cover,
