@@ -1,52 +1,67 @@
 import 'package:flutter/material.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 void main() {
-  runApp(const WochenplanerApp());
+  runApp(const MeineApp());
 }
 
-class WochenplanerApp extends StatelessWidget {
-  const WochenplanerApp({super.key});
+class MeineApp extends StatelessWidget {
+  const MeineApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Wochenplaner',
+      title: 'Meine Wochenplaner App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home:const WochenplanerPage(),
+      home: const MeinHomebildschirm(title: 'Home'),
     );
   }
 }
 
-class WochenplanerPage extends StatefulWidget {
-  const WochenplanerPage({super.key});
+class MeinHomebildschirm extends StatefulWidget {
+  const MeinHomebildschirm({Key? key, required this.title}) : super(key: key);
+
+  final String title;
 
   @override
-  _WochenplanerPageState createState() => _WochenplanerPageState();
+  _MeinHomebildschirmState createState() => _MeinHomebildschirmState();
 }
 
-class _WochenplanerPageState extends State<WochenplanerPage> {
+class _MeinHomebildschirmState extends State<MeinHomebildschirm> {
+  CalendarFormat _calendarFormat = CalendarFormat.month;
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Wochenplaner'),
+        title: Text(widget.title),
       ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Hier könnte Ihr Wochenplan stehen.',
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: const FloatingActionButton(
-        onPressed: null,
-        tooltip: 'Aufgabe hinzufügen',
-        child: Icon(Icons.add),
+      body: TableCalendar(
+        firstDay: DateTime.utc(2010, 10, 16),
+        lastDay: DateTime.utc(2030, 3, 14),
+        focusedDay: _focusedDay,
+        calendarFormat: _calendarFormat,
+        selectedDayPredicate: (day) {
+          return isSameDay(_selectedDay, day);
+        },
+        onDaySelected: (selectedDay, focusedDay) {
+          setState(() {
+            _selectedDay = selectedDay;
+            _focusedDay = focusedDay;
+          });
+        },
+        onFormatChanged: (format) {
+          setState(() {
+            _calendarFormat = format;
+          });
+        },
+        onPageChanged: (focusedDay) {
+          _focusedDay = focusedDay;
+        },
       ),
     );
   }
