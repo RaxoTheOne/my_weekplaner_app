@@ -75,23 +75,25 @@ class _MeinHomebildschirmState extends State<MeinHomebildschirm> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => NeuerTerminSeite()),
+            MaterialPageRoute(builder: (context) => const NeuerTerminSeite()),
           );
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
 }
 
 class NeuerTerminSeite extends StatelessWidget {
+  const NeuerTerminSeite({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Neuer Termin'),
+        title: const Text('Neuer Termin'),
       ),
-      body: Center(
+      body: const Center(
         child: Text('Hier können Benutzer Details zu ihrem neuen Termin eingeben.'),
       ),
     );
