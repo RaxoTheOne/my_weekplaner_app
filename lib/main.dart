@@ -26,6 +26,7 @@ class MeinHomebildschirm extends StatefulWidget {
   final String title;
 
   @override
+  // ignore: library_private_types_in_public_api
   _MeinHomebildschirmState createState() => _MeinHomebildschirmState();
 }
 
