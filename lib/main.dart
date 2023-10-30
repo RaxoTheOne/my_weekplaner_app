@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 void main() {
   runApp(const MeineApp());
@@ -10,91 +9,61 @@ class MeineApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Meine Wochenplaner App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MeinHomebildschirm(title: 'Home'),
+    return const MaterialApp(
+      title: 'Meine App',
+      home: MeinHomebildschirm(),
     );
   }
 }
 
 class MeinHomebildschirm extends StatefulWidget {
-  const MeinHomebildschirm({Key? key, required this.title}) : super(key: key);
-
-  final String title;
+  const MeinHomebildschirm({super.key});
 
   @override
   _MeinHomebildschirmState createState() => _MeinHomebildschirmState();
 }
 
 class _MeinHomebildschirmState extends State<MeinHomebildschirm> {
-  CalendarFormat _calendarFormat = CalendarFormat.month;
-  DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
+  int _selectedIndex = 0;
+  static const List<Widget> _widgetOptions = <Widget>[
+    Text('Home Page'),
+    Text('Calendar Page'),
+    Text('Settings Page'),
+  ];
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/hintergrund.jpg'),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: TableCalendar(
-          firstDay: DateTime.utc(2010, 10, 16),
-          lastDay: DateTime.utc(2030, 3, 14),
-          focusedDay: _focusedDay,
-          calendarFormat: _calendarFormat,
-          selectedDayPredicate: (day) {
-            return isSameDay(_selectedDay, day);
-          },
-          onDaySelected: (selectedDay, focusedDay) {
-            setState(() {
-              _selectedDay = selectedDay;
-              _focusedDay = focusedDay;
-            });
-          },
-          onFormatChanged: (format) {
-            setState(() {
-              _calendarFormat = format;
-            });
-          },
-          onPageChanged: (focusedDay) {
-            _focusedDay = focusedDay;
-          },
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const NeuerTerminSeite()),
-          );
-        },
-        child: const Icon(Icons.add),
-      ),
-    );
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
-}
-
-class NeuerTerminSeite extends StatelessWidget {
-  const NeuerTerminSeite({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Neuer Termin'),
+        title: const Text('Meine App'),
       ),
-      body: const Center(
-        child: Text('Hier können Benutzer Details zu ihrem neuen Termin eingeben.'),
+      body: Center(
+        child: _widgetOptions.elementAt(_selectedIndex),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: 'Calendar',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.amber[800],
+        onTap: _onItemTapped,
       ),
     );
   }
