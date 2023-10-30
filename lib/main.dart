@@ -41,7 +41,7 @@ class _MeinHomebildschirmState extends State<MeinHomebildschirm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Meine App'),
+        title: const Text('Meine Wochenplaner-App'),
       ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
