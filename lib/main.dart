@@ -133,15 +133,18 @@ class _CalendarPageState extends State<CalendarPage> {
         ),
         Expanded(
           child: ListView.builder(
-            itemCount:
-                _appointments.where((appointment) => isSameDay(appointment.date, _selectedDay)).length,
+            itemCount: _appointments
+                .where(
+                    (appointment) => isSameDay(appointment.date, _selectedDay))
+                .length,
             itemBuilder: (context, index) {
-              final appointment =
-                  _appointments.where((appointment) => isSameDay(appointment.date, _selectedDay)).elementAt(index);
+              final appointment = _appointments
+                  .where((appointment) =>
+                      isSameDay(appointment.date, _selectedDay))
+                  .elementAt(index);
               return ListTile(
                 title: Text(appointment.description),
-                subtitle:
-                    Text(DateFormat('yMMMd').format(appointment.date)),
+                subtitle: Text(DateFormat('yMMMd').format(appointment.date)),
                 trailing: IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () => _removeAppointment(appointment),
