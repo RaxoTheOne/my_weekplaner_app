@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:intl/intl.dart';
 
 void main() {
   runApp(const MeineApp());
 }
 
 class MeineApp extends StatelessWidget {
-  const MeineApp({super.key});
+  const MeineApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,7 @@ class MeineApp extends StatelessWidget {
 }
 
 class MeinHomebildschirm extends StatefulWidget {
-  const MeinHomebildschirm({super.key});
+  const MeinHomebildschirm({Key? key}) : super(key: key);
 
   @override
   _MeinHomebildschirmState createState() => _MeinHomebildschirmState();
@@ -26,7 +27,7 @@ class MeinHomebildschirm extends StatefulWidget {
 
 class _MeinHomebildschirmState extends State<MeinHomebildschirm> {
   int _selectedIndex = 0;
-  static const List<Widget> _widgetOptions = <Widget>[
+  static List<Widget> _widgetOptions = <Widget>[
     Text('Home Page'),
     CalendarPage(),
     Text('Settings Page'),
@@ -73,7 +74,7 @@ class _MeinHomebildschirmState extends State<MeinHomebildschirm> {
 }
 
 class CalendarPage extends StatefulWidget {
-  const CalendarPage({super.key});
+  const CalendarPage({Key? key}) : super(key: key);
 
   @override
   _CalendarPageState createState() => _CalendarPageState();
@@ -83,31 +84,73 @@ class _CalendarPageState extends State<CalendarPage> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
+  List<Appointment> _appointments = [];
+
+  void _addAppointment() {
+    if (_selectedDay != null) {
+      setState(() {
+        _appointments.add(Appointment(
+          date: _selectedDay!,
+          description: 'Neuer Termin',
+        ));
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return TableCalendar(
-      firstDay: DateTime.utc(2010, 10, 16),
-      lastDay: DateTime.utc(2030, 3, 14),
-      focusedDay: _focusedDay,
-      calendarFormat: _calendarFormat,
-      selectedDayPredicate: (day) {
-        return isSameDay(_selectedDay, day);
-      },
-      onDaySelected: (selectedDay, focusedDay) {
-        setState(() {
-          _selectedDay = selectedDay;
-          _focusedDay = focusedDay;
-        });
-      },
-      onFormatChanged: (format) {
-        setState(() {
-          _calendarFormat = format;
-        });
-      },
-      onPageChanged: (focusedDay) {
-        _focusedDay = focusedDay;
-      },
+    return Column(
+      children: [
+        TableCalendar(
+          firstDay: DateTime.utc(2010, 10, 16),
+          lastDay: DateTime.utc(2030, 3, 14),
+          focusedDay: _focusedDay,
+          calendarFormat: _calendarFormat,
+          selectedDayPredicate: (day) {
+            return isSameDay(_selectedDay, day);
+          },
+          onDaySelected: (selectedDay, focusedDay) {
+            setState(() {
+              _selectedDay = selectedDay;
+              _focusedDay = focusedDay;
+            });
+            _addAppointment();
+          },
+          onFormatChanged: (format) {
+            setState(() {
+              _calendarFormat = format;
+            });
+          },
+          onPageChanged: (focusedDay) {
+            _focusedDay = focusedDay;
+          },
+        ),
+        Expanded(
+          child: ListView.builder(
+            itemCount:
+                _appointments.where((appointment) => isSameDay(appointment.date, _selectedDay)).length,
+            itemBuilder: (context, index) {
+              final appointment =
+                  _appointments.where((appointment) => isSameDay(appointment.date, _selectedDay)).elementAt(index);
+              return ListTile(
+                title: Text(appointment.description),
+                subtitle:
+                    Text(DateFormat('yMMMd').format(appointment.date)),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
+}
+
+class Appointment {
+  final DateTime date;
+  final String description;
+
+  Appointment({
+    required this.date,
+    required this.description,
+  });
 }
