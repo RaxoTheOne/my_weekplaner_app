@@ -98,9 +98,11 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   void _removeAppointment(Appointment appointment) {
-    setState(() {
-      _appointments.remove(appointment);
-    });
+    if (_appointments.contains(appointment)) {
+      setState(() {
+        _appointments.remove(appointment);
+      });
+    }
   }
 
   @override
@@ -133,18 +135,15 @@ class _CalendarPageState extends State<CalendarPage> {
         ),
         Expanded(
           child: ListView.builder(
-            itemCount: _appointments
-                .where(
-                    (appointment) => isSameDay(appointment.date, _selectedDay))
-                .length,
+            itemCount:
+                _appointments.where((appointment) => isSameDay(appointment.date, _selectedDay)).length,
             itemBuilder: (context, index) {
-              final appointment = _appointments
-                  .where((appointment) =>
-                      isSameDay(appointment.date, _selectedDay))
-                  .elementAt(index);
+              final appointment =
+                  _appointments.where((appointment) => isSameDay(appointment.date, _selectedDay)).elementAt(index);
               return ListTile(
                 title: Text(appointment.description),
-                subtitle: Text(DateFormat('yMMMd').format(appointment.date)),
+                subtitle:
+                    Text(DateFormat('yMMMd').format(appointment.date)),
                 trailing: IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () => _removeAppointment(appointment),
