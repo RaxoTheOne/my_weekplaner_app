@@ -97,6 +97,12 @@ class _CalendarPageState extends State<CalendarPage> {
     }
   }
 
+  void _removeAppointment(Appointment appointment) {
+    setState(() {
+      _appointments.remove(appointment);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -136,6 +142,10 @@ class _CalendarPageState extends State<CalendarPage> {
                 title: Text(appointment.description),
                 subtitle:
                     Text(DateFormat('yMMMd').format(appointment.date)),
+                trailing: IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () => _removeAppointment(appointment),
+                ),
               );
             },
           ),
