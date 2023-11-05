@@ -97,6 +97,10 @@ class HomePage extends StatelessWidget {
                 leading: Icon(Icons.event),
                 title: Text(appointment.description),
                 subtitle: Text(DateFormat('yMMMd').format(appointment.date)),
+                trailing: IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () => appointmentModel.removeAppointment(appointment),
+                ),
               ),
             );
           }).toList(),
@@ -179,5 +183,12 @@ class AppointmentModel extends ChangeNotifier {
   void addAppointment(Appointment appointment) {
     _appointments.add(appointment);
     notifyListeners();
+  }
+
+  void removeAppointment(Appointment appointment) {
+    if (_appointments.contains(appointment)) {
+      _appointments.remove(appointment);
+      notifyListeners();
+    }
   }
 }
