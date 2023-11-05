@@ -28,7 +28,7 @@ class MeinHomebildschirm extends StatefulWidget {
 class _MeinHomebildschirmState extends State<MeinHomebildschirm> {
   int _selectedIndex = 0;
   static List<Widget> _widgetOptions = <Widget>[
-    Text('Home Page'),
+    HomePage(),
     CalendarPage(),
     Text('Settings Page'),
   ];
@@ -69,6 +69,31 @@ class _MeinHomebildschirmState extends State<MeinHomebildschirm> {
         selectedItemColor: Colors.amber[800],
         onTap: _onItemTapped,
       ),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  final List<Appointment> appointments = [];
+
+  HomePage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final upcomingAppointments = appointments.where((appointment) =>
+        appointment.date.isAfter(DateTime.now()) &&
+        appointment.date.isBefore(DateTime.now().add(Duration(days: 7))));
+
+    return ListView(
+      children: upcomingAppointments.map((appointment) {
+        return Card(
+          child: ListTile(
+            leading: Icon(Icons.event),
+            title: Text(appointment.description),
+            subtitle: Text(DateFormat('yMMMd').format(appointment.date)),
+          ),
+        );
+      }).toList(),
     );
   }
 }
@@ -135,18 +160,15 @@ class _CalendarPageState extends State<CalendarPage> {
         ),
         Expanded(
           child: ListView.builder(
-            itemCount: _appointments
-                .where(
-                    (appointment) => isSameDay(appointment.date, _selectedDay))
-                .length,
+            itemCount:
+                _appointments.where((appointment) => isSameDay(appointment.date, _selectedDay)).length,
             itemBuilder: (context, index) {
-              final appointment = _appointments
-                  .where((appointment) =>
-                      isSameDay(appointment.date, _selectedDay))
-                  .elementAt(index);
+              final appointment =
+                  _appointments.where((appointment) => isSameDay(appointment.date, _selectedDay)).elementAt(index);
               return ListTile(
                 title: Text(appointment.description),
-                subtitle: Text(DateFormat('yMMMd').format(appointment.date)),
+                subtitle:
+                    Text(DateFormat('yMMMd').format(appointment.date)),
                 trailing: IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () => _removeAppointment(appointment),
