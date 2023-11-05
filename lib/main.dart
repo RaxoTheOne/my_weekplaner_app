@@ -121,13 +121,14 @@ class _CalendarPageState extends State<CalendarPage> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
+  String? _selectedAppointment;
 
   void _addAppointment() {
-    if (_selectedDay != null) {
+    if (_selectedDay != null && _selectedAppointment != null) {
       final appointmentModel = Provider.of<AppointmentModel>(context, listen: false);
       appointmentModel.addAppointment(Appointment(
         date: _selectedDay!,
-        description: 'Neuer Termin',
+        description: _selectedAppointment!,
       ));
     }
   }
@@ -144,11 +145,30 @@ class _CalendarPageState extends State<CalendarPage> {
           selectedDayPredicate: (day) {
             return isSameDay(_selectedDay, day);
           },
-          onDaySelected: (selectedDay, focusedDay) {
+          onDaySelected: (selectedDay, focusedDay) async {
             setState(() {
               _selectedDay = selectedDay;
               _focusedDay = focusedDay;
             });
+            _selectedAppointment = await showDialog<String>(
+              context: context,
+              builder: (BuildContext context) {
+                return SimpleDialog(
+                  title: const Text('Wählen Sie einen Termin'),
+                  children: <Widget>[
+                    SimpleDialogOption(
+                      onPressed: () { Navigator.pop(context, 'Termin 1'); },
+                      child: const Text('Arbeit'),
+                    ),
+                    SimpleDialogOption(
+                      onPressed: () { Navigator.pop(context, 'Termin 2'); },
+                      child: const Text('Termin 1'),
+                    ),
+                    // Fügen Sie hier weitere Optionen hinzu
+                  ],
+                );
+              }
+            );
             _addAppointment();
           },
           onFormatChanged: (format) {
