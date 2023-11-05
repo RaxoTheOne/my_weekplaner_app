@@ -36,7 +36,7 @@ class _MeinHomebildschirmState extends State<MeinHomebildschirm> {
   static List<Widget> _widgetOptions = <Widget>[
     HomePage(),
     CalendarPage(),
-    Text('Settings Page'),
+    SettingsPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -121,14 +121,13 @@ class _CalendarPageState extends State<CalendarPage> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  String? _selectedAppointment;
 
   void _addAppointment() {
-    if (_selectedDay != null && _selectedAppointment != null) {
+    if (_selectedDay != null) {
       final appointmentModel = Provider.of<AppointmentModel>(context, listen: false);
       appointmentModel.addAppointment(Appointment(
         date: _selectedDay!,
-        description: _selectedAppointment!,
+        description: 'Neuer Termin',
       ));
     }
   }
@@ -145,30 +144,11 @@ class _CalendarPageState extends State<CalendarPage> {
           selectedDayPredicate: (day) {
             return isSameDay(_selectedDay, day);
           },
-          onDaySelected: (selectedDay, focusedDay) async {
+          onDaySelected: (selectedDay, focusedDay) {
             setState(() {
               _selectedDay = selectedDay;
               _focusedDay = focusedDay;
             });
-            _selectedAppointment = await showDialog<String>(
-              context: context,
-              builder: (BuildContext context) {
-                return SimpleDialog(
-                  title: const Text('Wählen Sie einen Termin'),
-                  children: <Widget>[
-                    SimpleDialogOption(
-                      onPressed: () { Navigator.pop(context, 'Arbeit'); },
-                      child: const Text('Arbeit'),
-                    ),
-                    SimpleDialogOption(
-                      onPressed: () { Navigator.pop(context, 'Termin 1'); },
-                      child: const Text('Termin 1'),
-                    ),
-                    // Fügen Sie hier weitere Optionen hinzu
-                  ],
-                );
-              }
-            );
             _addAppointment();
           },
           onFormatChanged: (format) {
@@ -179,6 +159,63 @@ class _CalendarPageState extends State<CalendarPage> {
           onPageChanged: (focusedDay) {
             _focusedDay = focusedDay;
           },
+        ),
+      ],
+    );
+  }
+}
+
+class SettingsPage extends StatefulWidget {
+  const SettingsPage({Key? key}) : super(key: key);
+
+  @override
+  _SettingsPageState createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  bool _notificationsOn = false;
+  bool _darkModeOn = false;
+  String _selectedLanguage = 'English';
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: <Widget>[
+        SwitchListTile(
+          title: const Text('Benachrichtigungen'),
+          value: _notificationsOn,
+          onChanged: (bool value) {
+            setState(() {
+              _notificationsOn = value;
+            });
+          },
+        ),
+        SwitchListTile(
+          title: const Text('Dunkelmodus'),
+          value: _darkModeOn,
+          onChanged: (bool value) {
+            setState(() {
+              _darkModeOn = value;
+            });
+          },
+        ),
+        ListTile(
+          title: const Text('Sprache'),
+          trailing: DropdownButton<String>(
+            value: _selectedLanguage,
+            onChanged: (String? newValue) {
+              setState(() {
+                _selectedLanguage = newValue!;
+              });
+            },
+            items: <String>['English', 'Deutsch', 'Español', 'Français']
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
         ),
       ],
     );
