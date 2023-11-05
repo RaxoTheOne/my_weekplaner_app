@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 void main() {
   runApp(
     ChangeNotifierProvider(
-      create: (context) => AppointmentModel(),
+      create: (context) => SettingsModel(),
       child: const MeineApp(),
     ),
   );
@@ -17,9 +17,16 @@ class MeineApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Meine Wochenplaner-App',
-      home: MeinHomebildschirm(),
+    return Consumer<SettingsModel>(
+      builder: (context, settingsModel, child) {
+        return MaterialApp(
+          title: 'Meine Wochenplaner-App',
+          theme: ThemeData(
+            brightness: settingsModel.darkModeOn ? Brightness.dark : Brightness.light,
+          ),
+          home: const MeinHomebildschirm(),
+        );
+      },
     );
   }
 }
@@ -173,30 +180,25 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  bool _notificationsOn = false;
-  bool _darkModeOn = false;
   String _selectedLanguage = 'English';
 
   @override
   Widget build(BuildContext context) {
+    final settingsModel = Provider.of<SettingsModel>(context);
     return ListView(
       children: <Widget>[
         SwitchListTile(
           title: const Text('Benachrichtigungen'),
-          value: _notificationsOn,
+          value: settingsModel.notificationsOn,
           onChanged: (bool value) {
-            setState(() {
-              _notificationsOn = value;
-            });
+            settingsModel.setNotificationsOn(value);
           },
         ),
         SwitchListTile(
           title: const Text('Dunkelmodus'),
-          value: _darkModeOn,
+          value: settingsModel.darkModeOn,
           onChanged: (bool value) {
-            setState(() {
-              _darkModeOn = value;
-            });
+            settingsModel.setDarkModeOn(value);
           },
         ),
         ListTile(
@@ -247,5 +249,23 @@ class AppointmentModel extends ChangeNotifier {
       _appointments.remove(appointment);
       notifyListeners();
     }
+  }
+}
+
+class SettingsModel extends ChangeNotifier {
+  bool _notificationsOn = false;
+  bool _darkModeOn = false;
+
+  bool get notificationsOn => _notificationsOn;
+  bool get darkModeOn => _darkModeOn;
+
+  void setNotificationsOn(bool value) {
+    _notificationsOn = value;
+    notifyListeners();
+  }
+
+  void setDarkModeOn(bool value) {
+    _darkModeOn = value;
+    notifyListeners();
   }
 }
