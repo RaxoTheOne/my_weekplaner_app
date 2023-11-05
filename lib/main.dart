@@ -87,6 +87,7 @@ class HomePage extends StatelessWidget {
     return ListView(
       children: upcomingAppointments.map((appointment) {
         return Card(
+          color: Colors.amber,
           child: ListTile(
             leading: Icon(Icons.event),
             title: Text(appointment.description),
