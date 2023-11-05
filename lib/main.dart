@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MeineApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => AppointmentModel(),
+      child: const MeineApp(),
+    ),
+  );
 }
 
 class MeineApp extends StatelessWidget {
@@ -74,27 +80,28 @@ class _MeinHomebildschirmState extends State<MeinHomebildschirm> {
 }
 
 class HomePage extends StatelessWidget {
-  final List<Appointment> appointments = [];
-
   HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final upcomingAppointments = appointments.where((appointment) =>
-        appointment.date.isAfter(DateTime.now()) &&
-        appointment.date.isBefore(DateTime.now().add(Duration(days: 7))));
+    return Consumer<AppointmentModel>(
+      builder: (context, appointmentModel, child) {
+        final upcomingAppointments = appointmentModel.appointments.where((appointment) =>
+            appointment.date.isAfter(DateTime.now()) &&
+            appointment.date.isBefore(DateTime.now().add(Duration(days: 7))));
 
-    return ListView(
-      children: upcomingAppointments.map((appointment) {
-        return Card(
-          color: Colors.amber,
-          child: ListTile(
-            leading: Icon(Icons.event),
-            title: Text(appointment.description),
-            subtitle: Text(DateFormat('yMMMd').format(appointment.date)),
-          ),
+        return ListView(
+          children: upcomingAppointments.map((appointment) {
+            return Card(
+              child: ListTile(
+                leading: Icon(Icons.event),
+                title: Text(appointment.description),
+                subtitle: Text(DateFormat('yMMMd').format(appointment.date)),
+              ),
+            );
+          }).toList(),
         );
-      }).toList(),
+      },
     );
   }
 }
@@ -110,24 +117,14 @@ class _CalendarPageState extends State<CalendarPage> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  List<Appointment> _appointments = [];
 
   void _addAppointment() {
     if (_selectedDay != null) {
-      setState(() {
-        _appointments.add(Appointment(
-          date: _selectedDay!,
-          description: 'Neuer Termin',
-        ));
-      });
-    }
-  }
-
-  void _removeAppointment(Appointment appointment) {
-    if (_appointments.contains(appointment)) {
-      setState(() {
-        _appointments.remove(appointment);
-      });
+      final appointmentModel = Provider.of<AppointmentModel>(context, listen: false);
+      appointmentModel.addAppointment(Appointment(
+        date: _selectedDay!,
+        description: 'Neuer Termin',
+      ));
     }
   }
 
@@ -159,25 +156,6 @@ class _CalendarPageState extends State<CalendarPage> {
             _focusedDay = focusedDay;
           },
         ),
-        Expanded(
-          child: ListView.builder(
-            itemCount:
-                _appointments.where((appointment) => isSameDay(appointment.date, _selectedDay)).length,
-            itemBuilder: (context, index) {
-              final appointment =
-                  _appointments.where((appointment) => isSameDay(appointment.date, _selectedDay)).elementAt(index);
-              return ListTile(
-                title: Text(appointment.description),
-                subtitle:
-                    Text(DateFormat('yMMMd').format(appointment.date)),
-                trailing: IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () => _removeAppointment(appointment),
-                ),
-              );
-            },
-          ),
-        ),
       ],
     );
   }
@@ -191,4 +169,15 @@ class Appointment {
     required this.date,
     required this.description,
   });
+}
+
+class AppointmentModel extends ChangeNotifier {
+  List<Appointment> _appointments = [];
+
+  List<Appointment> get appointments => _appointments;
+
+  void addAppointment(Appointment appointment) {
+    _appointments.add(appointment);
+    notifyListeners();
+  }
 }
