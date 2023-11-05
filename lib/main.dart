@@ -157,11 +157,11 @@ class _CalendarPageState extends State<CalendarPage> {
                   title: const Text('Wählen Sie einen Termin'),
                   children: <Widget>[
                     SimpleDialogOption(
-                      onPressed: () { Navigator.pop(context, 'Termin 1'); },
+                      onPressed: () { Navigator.pop(context, 'Arbeit'); },
                       child: const Text('Arbeit'),
                     ),
                     SimpleDialogOption(
-                      onPressed: () { Navigator.pop(context, 'Termin 2'); },
+                      onPressed: () { Navigator.pop(context, 'Termin 1'); },
                       child: const Text('Termin 1'),
                     ),
                     // Fügen Sie hier weitere Optionen hinzu
