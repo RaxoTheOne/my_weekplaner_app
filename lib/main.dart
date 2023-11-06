@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(
@@ -28,8 +27,7 @@ class MeineApp extends StatelessWidget {
         return MaterialApp(
           title: 'Meine Wochenplaner-App',
           theme: ThemeData(
-            brightness:
-                settingsModel.darkModeOn ? Brightness.dark : Brightness.light,
+            brightness: settingsModel.darkModeOn ? Brightness.dark : Brightness.light,
           ),
           home: const MeinHomebildschirm(),
         );
@@ -98,11 +96,9 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<AppointmentModel>(
       builder: (context, appointmentModel, child) {
-        final upcomingAppointments = appointmentModel.appointments.where(
-            (appointment) =>
-                appointment.date.isAfter(DateTime.now()) &&
-                appointment.date
-                    .isBefore(DateTime.now().add(Duration(days: 7))));
+        final upcomingAppointments = appointmentModel.appointments.where((appointment) =>
+            appointment.date.isAfter(DateTime.now()) &&
+            appointment.date.isBefore(DateTime.now().add(Duration(days: 7))));
 
         return ListView(
           children: upcomingAppointments.map((appointment) {
@@ -113,8 +109,7 @@ class HomePage extends StatelessWidget {
                 subtitle: Text(DateFormat('yMMMd').format(appointment.date)),
                 trailing: IconButton(
                   icon: Icon(Icons.delete),
-                  onPressed: () =>
-                      appointmentModel.removeAppointment(appointment),
+                  onPressed: () => appointmentModel.removeAppointment(appointment),
                 ),
               ),
             );
@@ -137,26 +132,10 @@ class _CalendarPageState extends State<CalendarPage> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   String _newAppointmentDescription = '';
-  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
-  @override
-  void initState() {
-    super.initState();
-    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    final initializationSettingsAndroid =
-        AndroidInitializationSettings('app_icon');
-    final initializationSettingsIOS = IOSInitializationSettings();
-    final initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsIOS,
-    );
-    flutterLocalNotificationsPlugin.initialize(initializationSettings);
-  }
-
-  Future<void> _scheduleNotification() async {
+  void _addAppointment() {
     if (_selectedDay != null && _newAppointmentDescription.isNotEmpty) {
-      final appointmentModel =
-          Provider.of<AppointmentModel>(context, listen: false);
+      final appointmentModel = Provider.of<AppointmentModel>(context, listen: false);
       appointmentModel.addAppointment(Appointment(
         date: _selectedDay!,
         description: _newAppointmentDescription,
@@ -164,26 +143,6 @@ class _CalendarPageState extends State<CalendarPage> {
       setState(() {
         _newAppointmentDescription = '';
       });
-
-      final scheduledTime = _selectedDay!.subtract(Duration(minutes: 15));
-      final androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        'your channel id',
-        'your channel name',
-        importance: Importance.max,
-        priority: Priority.high,
-      );
-      final iOSPlatformChannelSpecifics = IOSNotificationDetails();
-      final platformChannelSpecifics = NotificationDetails(
-        android: androidPlatformChannelSpecifics,
-        iOS: iOSPlatformChannelSpecifics,
-      );
-      await flutterLocalNotificationsPlugin.schedule(
-        0,
-        'Termin in 15 Minuten',
-        'Ihr Termin: $_newAppointmentDescription beginnt in 15 Minuten',
-        scheduledTime,
-        platformChannelSpecifics,
-      );
     }
   }
 
@@ -202,6 +161,7 @@ class _CalendarPageState extends State<CalendarPage> {
           onDaySelected: (selectedDay, focusedDay) {
             setState(() {
               _selectedDay = selectedDay;
+              _focusedDay = focusedDay;
             });
           },
           onFormatChanged: (format) {
@@ -210,24 +170,19 @@ class _CalendarPageState extends State<CalendarPage> {
             });
           },
           onPageChanged: (focusedDay) {
+            _focusedDay = focusedDay;
+          },
+        ),
+        TextField(
+          decoration: InputDecoration(labelText: 'Terminbeschreibung'),
+          onChanged: (value) {
             setState(() {
-              _focusedDay = focusedDay;
+              _newAppointmentDescription = value;
             });
           },
         ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextField(
-            decoration: InputDecoration(
-              hintText: 'Terminbeschreibung eingeben',
-            ),
-            onChanged: (text) {
-              _newAppointmentDescription = text;
-            },
-          ),
-        ),
         ElevatedButton(
-          onPressed: _scheduleNotification,
+          onPressed: _addAppointment,
           child: Text('Termin hinzufügen'),
         ),
       ],
