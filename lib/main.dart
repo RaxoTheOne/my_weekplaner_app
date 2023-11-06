@@ -25,7 +25,8 @@ class MeineApp extends StatelessWidget {
         return MaterialApp(
           title: 'Meine Wochenplaner-App',
           theme: ThemeData(
-            brightness: settingsModel.darkModeOn ? Brightness.dark : Brightness.light,
+            brightness:
+                settingsModel.darkModeOn ? Brightness.dark : Brightness.light,
           ),
           home: MeinHomebildschirm(),
         );
@@ -91,9 +92,11 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<AppointmentModel>(
       builder: (context, appointmentModel, child) {
-        final upcomingAppointments = appointmentModel.appointments.where((appointment) =>
-            appointment.date.isAfter(DateTime.now()) &&
-            appointment.date.isBefore(DateTime.now().add(Duration(days: 7))));
+        final upcomingAppointments = appointmentModel.appointments.where(
+            (appointment) =>
+                appointment.date.isAfter(DateTime.now()) &&
+                appointment.date
+                    .isBefore(DateTime.now().add(Duration(days: 7))));
 
         return ListView(
           children: upcomingAppointments.map((appointment) {
@@ -104,7 +107,8 @@ class HomePage extends StatelessWidget {
                 subtitle: Text(DateFormat('yMMMd').format(appointment.date)),
                 trailing: IconButton(
                   icon: Icon(Icons.delete),
-                  onPressed: () => appointmentModel.removeAppointment(appointment),
+                  onPressed: () =>
+                      appointmentModel.removeAppointment(appointment),
                 ),
               ),
             );
@@ -127,7 +131,8 @@ class _CalendarPageState extends State<CalendarPage> {
 
   void _addAppointment() {
     if (_selectedDay != null) {
-      final appointmentModel = Provider.of<AppointmentModel>(context, listen: false);
+      final appointmentModel =
+          Provider.of<AppointmentModel>(context, listen: false);
       appointmentModel.addAppointment(Appointment(
         date: _selectedDay!,
         description: 'Neuer Termin',
