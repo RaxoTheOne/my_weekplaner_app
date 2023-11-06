@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
+import 'package:provider/provider';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 void main() {
   runApp(
@@ -98,7 +99,7 @@ class HomePage extends StatelessWidget {
       builder: (context, appointmentModel, child) {
         final upcomingAppointments = appointmentModel.appointments.where((appointment) =>
             appointment.date.isAfter(DateTime.now()) &&
-            appointment.date.isBefore(DateTime.now().add(Duration(days: 7))));
+            appointment.date.isBefore(DateTime.now().add(Duration(days: 7)));
 
         return ListView(
           children: upcomingAppointments.map((appointment) {
@@ -132,8 +133,22 @@ class _CalendarPageState extends State<CalendarPage> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   String _newAppointmentDescription = '';
+  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
-  void _addAppointment() {
+  @override
+  void initState() {
+    super.initState();
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    final initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
+    final initializationSettingsIOS = IOSInitializationSettings();
+    final initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsIOS,
+    );
+    flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  Future<void> _scheduleNotification() async {
     if (_selectedDay != null && _newAppointmentDescription.isNotEmpty) {
       final appointmentModel = Provider.of<AppointmentModel>(context, listen: false);
       appointmentModel.addAppointment(Appointment(
@@ -143,6 +158,26 @@ class _CalendarPageState extends State<CalendarPage> {
       setState(() {
         _newAppointmentDescription = '';
       });
+
+      final scheduledTime = _selectedDay!.subtract(Duration(minutes: 15));
+      final androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        'your channel id',
+        'your channel name',
+        importance: Importance.max,
+        priority: Priority.high,
+      );
+      final iOSPlatformChannelSpecifics = IOSNotificationDetails();
+      final platformChannelSpecifics = NotificationDetails(
+        android: androidPlatformChannelSpecifics,
+        iOS: iOSPlatformChannelSpecifics,
+      );
+      await flutterLocalNotificationsPlugin.schedule(
+        0,
+        'Termin in 15 Minuten',
+        'Ihr Termin: $_newAppointmentDescription beginnt in 15 Minuten',
+        scheduledTime,
+        platformChannelSpecifics,
+      );
     }
   }
 
@@ -161,7 +196,6 @@ class _CalendarPageState extends State<CalendarPage> {
           onDaySelected: (selectedDay, focusedDay) {
             setState(() {
               _selectedDay = selectedDay;
-              _focusedDay = focusedDay;
             });
           },
           onFormatChanged: (format) {
@@ -170,19 +204,24 @@ class _CalendarPageState extends State<CalendarPage> {
             });
           },
           onPageChanged: (focusedDay) {
-            _focusedDay = focusedDay;
-          },
-        ),
-        TextField(
-          decoration: InputDecoration(labelText: 'Terminbeschreibung'),
-          onChanged: (value) {
             setState(() {
-              _newAppointmentDescription = value;
+              _focusedDay = focusedDay;
             });
           },
         ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            decoration: InputDecoration(
+              hintText: 'Terminbeschreibung eingeben',
+            ),
+            onChanged: (text) {
+              _newAppointmentDescription = text;
+            },
+          ),
+        ),
         ElevatedButton(
-          onPressed: _addAppointment,
+          onPressed: _scheduleNotification,
           child: Text('Termin hinzufügen'),
         ),
       ],
