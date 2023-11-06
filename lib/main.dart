@@ -42,7 +42,7 @@ class MeinHomebildschirm extends StatefulWidget {
 
 class _MeinHomebildschirmState extends State<MeinHomebildschirm> {
   int _selectedIndex = 0;
-  static List<Widget> _widgetOptions = <Widget>[
+    static List<Widget> _widgetOptions = <Widget>[
     HomePage(),
     CalendarPage(),
     SettingsPage(),
@@ -61,9 +61,7 @@ class _MeinHomebildschirmState extends State<MeinHomebildschirm> {
         title: const Text('Meine Wochenplaner-App'),
         backgroundColor: Colors.orange,
       ),
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
+      body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.grey,
         items: const <BottomNavigationBarItem>[
@@ -270,15 +268,4 @@ class SettingsModel extends ChangeNotifier {
     _darkModeOn = value;
     notifyListeners();
   }
-}
-
-void changeNotifier() {
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => SettingsModel(),
-      child: MaterialApp(
-        home: const MeineApp(),
-      ),
-    ),
-  );
 }
