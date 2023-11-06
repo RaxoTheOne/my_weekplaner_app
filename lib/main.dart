@@ -5,18 +5,19 @@ import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => SettingsModel(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AppointmentModel()),
+        ChangeNotifierProvider(create: (context) => SettingsModel()),
+      ],
       child: MaterialApp(
-        home: const MeineApp(),
+        home: MeineApp(),
       ),
     ),
   );
 }
 
 class MeineApp extends StatelessWidget {
-  const MeineApp({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Consumer<SettingsModel>(
@@ -34,25 +35,12 @@ class MeineApp extends StatelessWidget {
 }
 
 class MeinHomebildschirm extends StatefulWidget {
-  const MeinHomebildschirm({Key? key}) : super(key: key);
-
   @override
   _MeinHomebildschirmState createState() => _MeinHomebildschirmState();
 }
 
 class _MeinHomebildschirmState extends State<MeinHomebildschirm> {
   int _selectedIndex = 0;
-  static List<Widget> _widgetOptions = [
-    HomePage(),
-    CalendarPage(),
-    SettingsPage(),
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +49,7 @@ class _MeinHomebildschirmState extends State<MeinHomebildschirm> {
         title: const Text('Meine Wochenplaner-App'),
         backgroundColor: Colors.orange,
       ),
-      body: _widgetOptions[_selectedIndex],
+      body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.grey,
         items: const <BottomNavigationBarItem>[
@@ -84,11 +72,21 @@ class _MeinHomebildschirmState extends State<MeinHomebildschirm> {
       ),
     );
   }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  static List<Widget> _widgetOptions = <Widget>[
+    HomePage(),
+    CalendarPage(),
+    SettingsPage(),
+  ];
 }
 
 class HomePage extends StatelessWidget {
-  HomePage({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Consumer<AppointmentModel>(
@@ -118,8 +116,6 @@ class HomePage extends StatelessWidget {
 }
 
 class CalendarPage extends StatefulWidget {
-  const CalendarPage({Key? key}) : super(key: key);
-
   @override
   _CalendarPageState createState() => _CalendarPageState();
 }
@@ -173,8 +169,6 @@ class _CalendarPageState extends State<CalendarPage> {
 }
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({Key? key}) : super(key: key);
-
   @override
   _SettingsPageState createState() => _SettingsPageState();
 }
