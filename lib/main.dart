@@ -7,17 +7,19 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => AppointmentModel()),
         ChangeNotifierProvider(create: (context) => SettingsModel()),
+        ChangeNotifierProvider(create: (context) => AppointmentModel()),
       ],
       child: MaterialApp(
-        home: MeineApp(),
+        home: const MeineApp(),
       ),
     ),
   );
 }
 
 class MeineApp extends StatelessWidget {
+  const MeineApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Consumer<SettingsModel>(
@@ -25,10 +27,9 @@ class MeineApp extends StatelessWidget {
         return MaterialApp(
           title: 'Meine Wochenplaner-App',
           theme: ThemeData(
-            brightness:
-                settingsModel.darkModeOn ? Brightness.dark : Brightness.light,
+            brightness: settingsModel.darkModeOn ? Brightness.dark : Brightness.light,
           ),
-          home: MeinHomebildschirm(),
+          home: const MeinHomebildschirm(),
         );
       },
     );
@@ -36,12 +37,25 @@ class MeineApp extends StatelessWidget {
 }
 
 class MeinHomebildschirm extends StatefulWidget {
+  const MeinHomebildschirm({Key? key}) : super(key: key);
+
   @override
   _MeinHomebildschirmState createState() => _MeinHomebildschirmState();
 }
 
 class _MeinHomebildschirmState extends State<MeinHomebildschirm> {
   int _selectedIndex = 0;
+  static List<Widget> _widgetOptions = <Widget>[
+    HomePage(),
+    CalendarPage(),
+    SettingsPage(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,30 +87,18 @@ class _MeinHomebildschirmState extends State<MeinHomebildschirm> {
       ),
     );
   }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  static List<Widget> _widgetOptions = <Widget>[
-    HomePage(),
-    CalendarPage(),
-    SettingsPage(),
-  ];
 }
 
 class HomePage extends StatelessWidget {
+  HomePage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Consumer<AppointmentModel>(
       builder: (context, appointmentModel, child) {
-        final upcomingAppointments = appointmentModel.appointments.where(
-            (appointment) =>
-                appointment.date.isAfter(DateTime.now()) &&
-                appointment.date
-                    .isBefore(DateTime.now().add(Duration(days: 7))));
+        final upcomingAppointments = appointmentModel.appointments.where((appointment) =>
+            appointment.date.isAfter(DateTime.now()) &&
+            appointment.date.isBefore(DateTime.now().add(Duration(days: 7))));
 
         return ListView(
           children: upcomingAppointments.map((appointment) {
@@ -107,8 +109,7 @@ class HomePage extends StatelessWidget {
                 subtitle: Text(DateFormat('yMMMd').format(appointment.date)),
                 trailing: IconButton(
                   icon: Icon(Icons.delete),
-                  onPressed: () =>
-                      appointmentModel.removeAppointment(appointment),
+                  onPressed: () => appointmentModel.removeAppointment(appointment),
                 ),
               ),
             );
@@ -120,6 +121,8 @@ class HomePage extends StatelessWidget {
 }
 
 class CalendarPage extends StatefulWidget {
+  const CalendarPage({Key? key}) : super(key: key);
+
   @override
   _CalendarPageState createState() => _CalendarPageState();
 }
@@ -128,15 +131,18 @@ class _CalendarPageState extends State<CalendarPage> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
+  String _newAppointmentDescription = '';
 
   void _addAppointment() {
-    if (_selectedDay != null) {
-      final appointmentModel =
-          Provider.of<AppointmentModel>(context, listen: false);
+    if (_selectedDay != null && _newAppointmentDescription.isNotEmpty) {
+      final appointmentModel = Provider.of<AppointmentModel>(context, listen: false);
       appointmentModel.addAppointment(Appointment(
         date: _selectedDay!,
-        description: 'Neuer Termin',
+        description: _newAppointmentDescription,
       ));
+      setState(() {
+        _newAppointmentDescription = '';
+      });
     }
   }
 
@@ -157,7 +163,6 @@ class _CalendarPageState extends State<CalendarPage> {
               _selectedDay = selectedDay;
               _focusedDay = focusedDay;
             });
-            _addAppointment();
           },
           onFormatChanged: (format) {
             setState(() {
@@ -168,12 +173,26 @@ class _CalendarPageState extends State<CalendarPage> {
             _focusedDay = focusedDay;
           },
         ),
+        TextField(
+          decoration: InputDecoration(labelText: 'Terminbeschreibung'),
+          onChanged: (value) {
+            setState(() {
+              _newAppointmentDescription = value;
+            });
+          },
+        ),
+        ElevatedButton(
+          onPressed: _addAppointment,
+          child: Text('Termin hinzufügen'),
+        ),
       ],
     );
   }
 }
 
 class SettingsPage extends StatefulWidget {
+  const SettingsPage({Key? key}) : super(key: key);
+
   @override
   _SettingsPageState createState() => _SettingsPageState();
 }
