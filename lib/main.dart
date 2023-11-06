@@ -97,7 +97,7 @@ class HomePage extends StatelessWidget {
       builder: (context, appointmentModel, child) {
         final upcomingAppointments = appointmentModel.appointments.where((appointment) =>
             appointment.date.isAfter(DateTime.now()) &&
-            appointment.date.isBefore(DateTime.now().add(Duration(days: 7)));
+            appointment.date.isBefore(DateTime.now().add(Duration(days: 7))));
 
         return ListView(
           children: upcomingAppointments.map((appointment) {
@@ -270,4 +270,15 @@ class SettingsModel extends ChangeNotifier {
     _darkModeOn = value;
     notifyListeners();
   }
+}
+
+void changeNotifier() {
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => SettingsModel(),
+      child: MaterialApp(
+        home: const MeineApp(),
+      ),
+    ),
+  );
 }
