@@ -26,7 +26,7 @@ class MeineApp extends StatelessWidget {
           theme: ThemeData(
             brightness: settingsModel.darkModeOn ? Brightness.dark : Brightness.light,
           ),
-          home: const MeinHomebildschirm(),
+          home: MeinHomebildschirm(),
         );
       },
     );
@@ -42,7 +42,7 @@ class MeinHomebildschirm extends StatefulWidget {
 
 class _MeinHomebildschirmState extends State<MeinHomebildschirm> {
   int _selectedIndex = 0;
-    static List<Widget> _widgetOptions = <Widget>[
+  static List<Widget> _widgetOptions = [
     HomePage(),
     CalendarPage(),
     SettingsPage(),
@@ -61,7 +61,7 @@ class _MeinHomebildschirmState extends State<MeinHomebildschirm> {
         title: const Text('Meine Wochenplaner-App'),
         backgroundColor: Colors.orange,
       ),
-      body: _widgetOptions.elementAt(_selectedIndex),
+      body: _widgetOptions[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.grey,
         items: const <BottomNavigationBarItem>[
