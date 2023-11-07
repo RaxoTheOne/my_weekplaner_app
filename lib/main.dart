@@ -198,7 +198,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  String _selectedLanguage = 'English';
+  String _selectedLanguage = 'Deutsch';
 
   @override
   Widget build(BuildContext context) {
