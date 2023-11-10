@@ -164,6 +164,7 @@ class _CalendarPageState extends State<CalendarPage> {
       setState(() {
         _newAppointmentDescription = '';
         _selectedTime = TimeOfDay.now();
+        _selectedDay = null;
       });
     }
   }
@@ -206,6 +207,29 @@ class _CalendarPageState extends State<CalendarPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            Text(
+              _selectedDay != null
+                  ? 'Datum: ${DateFormat('yMMMd').format(_selectedDay!)}'
+                  : 'Datum auswählen',
+              style: TextStyle(fontSize: 16),
+            ),
+            IconButton(
+              icon: Icon(Icons.calendar_today),
+              onPressed: () async {
+                final DateTime? picked = await showDatePicker(
+                  context: context,
+                  initialDate: _selectedDay ?? DateTime.now(),
+                  firstDate: DateTime(2010, 10, 16),
+                  lastDate: DateTime(2030, 3, 14),
+                );
+
+                if (picked != null && picked != _selectedDay) {
+                  setState(() {
+                    _selectedDay = picked;
+                  });
+                }
+              },
+            ),
             Text(
               'Uhrzeit: ${_selectedTime.format(context)}',
               style: TextStyle(fontSize: 16),
