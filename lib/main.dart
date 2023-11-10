@@ -98,10 +98,10 @@ class HomePage extends StatelessWidget {
     return Consumer<AppointmentModel>(
       builder: (context, appointmentModel, child) {
         final upcomingAppointments = appointmentModel.appointments.where(
-            (appointment) =>
-                appointment.date.isAfter(DateTime.now()) &&
-                appointment.date
-                    .isBefore(DateTime.now().add(Duration(days: 7))));
+          (appointment) =>
+              appointment.date.isAfter(DateTime.now()) &&
+              appointment.date.isBefore(DateTime.now().add(Duration(days: 7))),
+        );
 
         return ListView(
           children: upcomingAppointments.map((appointment) {
@@ -109,11 +109,12 @@ class HomePage extends StatelessWidget {
               child: ListTile(
                 leading: Icon(Icons.event),
                 title: Text(appointment.description),
-                subtitle: Text(DateFormat('yMMMd').format(appointment.date)),
+                subtitle: Text(
+                  '${DateFormat('yMMMd').format(appointment.date)} ${appointment.time.format(context)}',
+                ),
                 trailing: IconButton(
                   icon: Icon(Icons.delete),
-                  onPressed: () =>
-                      appointmentModel.removeAppointment(appointment),
+                  onPressed: () => appointmentModel.removeAppointment(appointment),
                 ),
               ),
             );
@@ -135,7 +136,21 @@ class _CalendarPageState extends State<CalendarPage> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
+  TimeOfDay _selectedTime = TimeOfDay.now();
   String _newAppointmentDescription = '';
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: _selectedTime,
+    );
+
+    if (picked != null && picked != _selectedTime) {
+      setState(() {
+        _selectedTime = picked;
+      });
+    }
+  }
 
   void _addAppointment() {
     if (_selectedDay != null && _newAppointmentDescription.isNotEmpty) {
@@ -143,10 +158,12 @@ class _CalendarPageState extends State<CalendarPage> {
           Provider.of<AppointmentModel>(context, listen: false);
       appointmentModel.addAppointment(Appointment(
         date: _selectedDay!,
+        time: _selectedTime,
         description: _newAppointmentDescription,
       ));
       setState(() {
         _newAppointmentDescription = '';
+        _selectedTime = TimeOfDay.now();
       });
     }
   }
@@ -186,9 +203,22 @@ class _CalendarPageState extends State<CalendarPage> {
             });
           },
         ),
-        ElevatedButton(
-          onPressed: _addAppointment,
-          child: Text('Termin hinzufügen'),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Uhrzeit: ${_selectedTime.format(context)}',
+              style: TextStyle(fontSize: 16),
+            ),
+            IconButton(
+              icon: Icon(Icons.access_time),
+              onPressed: () => _selectTime(context),
+            ),
+            ElevatedButton(
+              onPressed: _addAppointment,
+              child: Text('Termin hinzufügen'),
+            ),
+          ],
         ),
       ],
     );
@@ -249,10 +279,12 @@ class _SettingsPageState extends State<SettingsPage> {
 
 class Appointment {
   final DateTime date;
+  final TimeOfDay time;
   final String description;
 
   Appointment({
     required this.date,
+    required this.time,
     required this.description,
   });
 }
