@@ -196,13 +196,16 @@ class _CalendarPageState extends State<CalendarPage> {
             _focusedDay = focusedDay;
           },
         ),
-        TextField(
-          decoration: InputDecoration(labelText: 'Terminbeschreibung'),
-          onChanged: (value) {
-            setState(() {
-              _newAppointmentDescription = value;
-            });
-          },
+        Container(
+          alignment: Alignment.center,
+          child: TextField(
+            decoration: InputDecoration(labelText: 'Terminbeschreibung'),
+            onChanged: (value) {
+              setState(() {
+                _newAppointmentDescription = value;
+              });
+            },
+          ),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
