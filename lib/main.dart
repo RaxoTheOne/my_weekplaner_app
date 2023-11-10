@@ -205,14 +205,8 @@ class _CalendarPageState extends State<CalendarPage> {
           },
         ),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              _selectedDay != null
-                  ? 'Datum: ${DateFormat('yMMMd').format(_selectedDay!)}'
-                  : 'Datum auswählen',
-              style: TextStyle(fontSize: 16),
-            ),
             IconButton(
               icon: Icon(Icons.calendar_today),
               onPressed: () async {
@@ -238,12 +232,17 @@ class _CalendarPageState extends State<CalendarPage> {
               icon: Icon(Icons.access_time),
               onPressed: () => _selectTime(context),
             ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
             ElevatedButton(
               onPressed: _addAppointment,
               child: Text('Termin hinzufügen'),
             ),
           ],
-        ),
+        )
       ],
     );
   }
