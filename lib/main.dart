@@ -114,7 +114,8 @@ class HomePage extends StatelessWidget {
                 ),
                 trailing: IconButton(
                   icon: Icon(Icons.delete),
-                  onPressed: () => appointmentModel.removeAppointment(appointment),
+                  onPressed: () =>
+                      appointmentModel.removeAppointment(appointment),
                 ),
               ),
             );
