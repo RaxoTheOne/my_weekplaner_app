@@ -146,7 +146,7 @@ class _CalendarPageState extends State<CalendarPage> {
   TimeOfDay _selectedTime = TimeOfDay.now();
   String _newAppointmentDescription = '';
 
-  Future<void> _selectTime(BuildContext context) async {
+  void _selectTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: _selectedTime,
@@ -175,24 +175,26 @@ class _CalendarPageState extends State<CalendarPage> {
         barrierDismissible: false,
       );
 
-      // Führe die Hinzufügeoperation asynchron aus
-      await Future.delayed(Duration(seconds: 2)); // Simuliere eine asynchrone Aufgabe (ersetze dies durch deine tatsächliche Logik)
+      try {
+        // Simuliere eine asynchrone Aufgabe (ersetze dies durch deine tatsächliche Logik)
+        await Future.delayed(Duration(seconds: 2));
 
-      // Füge den Termin hinzu
-      appointmentModel.addAppointment(Appointment(
-        date: _selectedDay!,
-        time: _selectedTime,
-        description: _newAppointmentDescription,
-      ));
+        // Füge den Termin hinzu
+        appointmentModel.addAppointment(Appointment(
+          date: _selectedDay!,
+          time: _selectedTime,
+          description: _newAppointmentDescription,
+        ));
 
-      // Schließe den Ladeanzeiger
-      Navigator.of(context).pop();
-
-      setState(() {
-        _newAppointmentDescription = '';
-        _selectedTime = TimeOfDay.now();
-        _selectedDay = null;
-      });
+        setState(() {
+          _newAppointmentDescription = '';
+          _selectedTime = TimeOfDay.now();
+          _selectedDay = null;
+        });
+      } finally {
+        // Schließe den Ladeanzeiger unabhängig vom Erfolg oder Fehler
+        Navigator.of(context).pop();
+      }
     }
   }
 
