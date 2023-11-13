@@ -97,6 +97,12 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<AppointmentModel>(
       builder: (context, appointmentModel, child) {
+        if (appointmentModel.isLoading) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
         final upcomingAppointments = appointmentModel.appointments.where(
           (appointment) =>
               appointment.date.isAfter(DateTime.now()) &&
@@ -153,15 +159,35 @@ class _CalendarPageState extends State<CalendarPage> {
     }
   }
 
-  void _addAppointment() {
+  void _addAppointment() async {
     if (_selectedDay != null && _newAppointmentDescription.isNotEmpty) {
       final appointmentModel =
           Provider.of<AppointmentModel>(context, listen: false);
+
+      // Zeige den Ladeanzeiger an
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+        barrierDismissible: false,
+      );
+
+      // Führe die Hinzufügeoperation asynchron aus
+      await Future.delayed(Duration(seconds: 2)); // Simuliere eine asynchrone Aufgabe (ersetze dies durch deine tatsächliche Logik)
+
+      // Füge den Termin hinzu
       appointmentModel.addAppointment(Appointment(
         date: _selectedDay!,
         time: _selectedTime,
         description: _newAppointmentDescription,
       ));
+
+      // Schließe den Ladeanzeiger
+      Navigator.of(context).pop();
+
       setState(() {
         _newAppointmentDescription = '';
         _selectedTime = TimeOfDay.now();
@@ -318,8 +344,21 @@ class Appointment {
 
 class AppointmentModel extends ChangeNotifier {
   List<Appointment> _appointments = [];
+  bool _isLoading = false;
 
   List<Appointment> get appointments => _appointments;
+  bool get isLoading => _isLoading;
+
+  void loadAppointments() async {
+    _isLoading = true;
+    notifyListeners();
+
+    // Simuliere eine Datenladefunktion (ersetze dies durch deine tatsächliche Logik)
+    await Future.delayed(Duration(seconds: 2));
+
+    _isLoading = false;
+    notifyListeners();
+  }
 
   void addAppointment(Appointment appointment) {
     _appointments.add(appointment);
