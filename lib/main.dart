@@ -97,12 +97,6 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<AppointmentModel>(
       builder: (context, appointmentModel, child) {
-        if (appointmentModel.isLoading) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-
         final upcomingAppointments = appointmentModel.appointments.where(
           (appointment) =>
               appointment.date.isAfter(DateTime.now()) &&
@@ -146,7 +140,7 @@ class _CalendarPageState extends State<CalendarPage> {
   TimeOfDay _selectedTime = TimeOfDay.now();
   String _newAppointmentDescription = '';
 
-  void _selectTime(BuildContext context) async {
+  Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: _selectedTime,
@@ -159,42 +153,20 @@ class _CalendarPageState extends State<CalendarPage> {
     }
   }
 
-  void _addAppointment() async {
+  void _addAppointment() {
     if (_selectedDay != null && _newAppointmentDescription.isNotEmpty) {
       final appointmentModel =
           Provider.of<AppointmentModel>(context, listen: false);
-
-      // Zeige den Ladeanzeiger an
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        },
-        barrierDismissible: false,
-      );
-
-      try {
-        // Simuliere eine asynchrone Aufgabe (ersetze dies durch deine tatsächliche Logik)
-        await Future.delayed(Duration(seconds: 2));
-
-        // Füge den Termin hinzu
-        appointmentModel.addAppointment(Appointment(
-          date: _selectedDay!,
-          time: _selectedTime,
-          description: _newAppointmentDescription,
-        ));
-
-        setState(() {
-          _newAppointmentDescription = '';
-          _selectedTime = TimeOfDay.now();
-          _selectedDay = null;
-        });
-      } finally {
-        // Schließe den Ladeanzeiger unabhängig vom Erfolg oder Fehler
-        Navigator.of(context).pop();
-      }
+      appointmentModel.addAppointment(Appointment(
+        date: _selectedDay!,
+        time: _selectedTime,
+        description: _newAppointmentDescription,
+      ));
+      setState(() {
+        _newAppointmentDescription = '';
+        _selectedTime = TimeOfDay.now();
+        _selectedDay = null;
+      });
     }
   }
 
@@ -346,21 +318,8 @@ class Appointment {
 
 class AppointmentModel extends ChangeNotifier {
   List<Appointment> _appointments = [];
-  bool _isLoading = false;
 
   List<Appointment> get appointments => _appointments;
-  bool get isLoading => _isLoading;
-
-  void loadAppointments() async {
-    _isLoading = true;
-    notifyListeners();
-
-    // Simuliere eine Datenladefunktion (ersetze dies durch deine tatsächliche Logik)
-    await Future.delayed(Duration(seconds: 2));
-
-    _isLoading = false;
-    notifyListeners();
-  }
 
   void addAppointment(Appointment appointment) {
     _appointments.add(appointment);
