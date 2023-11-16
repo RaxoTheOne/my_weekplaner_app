@@ -6,6 +6,7 @@ class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
+
 class _SplashScreenState extends State<SplashScreen> {
   bool _isVisible = false;
   @override
@@ -18,6 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
       });
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,16 +46,8 @@ class _SplashScreenState extends State<SplashScreen> {
                 );
               },
               child: Container(
-                width: MediaQuery.of(context).size.width / 2,
-                height: MediaQuery.of(context).size.height / 2,
-                color: Colors.orange,
-                child: Center(
-                  child: Text(
-                    'Tap Me!',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
+                  child: Image.asset(
+                      'assets/_44db56b6-465b-4127-bf30-e0fb740191e8.jpeg')),
             ),
           ),
         ],
