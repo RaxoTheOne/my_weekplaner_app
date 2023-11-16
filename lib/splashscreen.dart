@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
           Container(
             color: Colors.white,
             child: Center(
-              child: FlutterLogo(size: 200),
+              child: FlutterLogo(size: 400),
             ),
           ),
           // Animierter roter Container mit InkWell
@@ -46,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
               child: Container(
                 width: MediaQuery.of(context).size.width / 2,
                 height: MediaQuery.of(context).size.height / 2,
-                color: Colors.red,
+                color: Colors.orange,
                 child: Center(
                   child: Text(
                     'Tap me!',
