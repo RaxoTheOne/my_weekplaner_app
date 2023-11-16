@@ -30,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
               child: FlutterLogo(size: 400),
             ),
           ),
-          // Animierter roter Container mit InkWell
+          // Animierter orangener Container mit InkWell
           AnimatedPositioned(
             duration: Duration(seconds: 1),
             curve: Curves.easeInOut,
