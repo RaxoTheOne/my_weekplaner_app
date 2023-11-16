@@ -36,12 +36,6 @@ class MeineApp extends StatelessWidget {
   }
 }
 
-
-
-
-
-
-
 class Appointment {
   final DateTime date;
   final TimeOfDay time;
