@@ -25,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
         children: [
           // Hintergrund des Splashscreens
           Container(
-            color: Colors.white,
+            color: Colors.black,
             child: Center(
               child: FlutterLogo(size: 400),
             ),
@@ -49,7 +49,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 color: Colors.orange,
                 child: Center(
                   child: Text(
-                    'Tap me!',
+                    'Tap Me!',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
