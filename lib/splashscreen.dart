@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
         children: [
           // Hintergrund des Splashscreens
           Image.asset(
-            'assets/_44db56b6-465b-4127-bf30-e0fb740191e8.jpeg',
+            'assets/_cf771525-d194-4742-9e45-a413a6604178.jpeg',
             fit: BoxFit.cover,
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,

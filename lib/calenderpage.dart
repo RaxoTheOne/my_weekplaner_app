@@ -49,82 +49,87 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TableCalendar(
-          firstDay: DateTime.utc(2010, 10, 16),
-          lastDay: DateTime.utc(2030, 3, 14),
-          focusedDay: _focusedDay,
-          calendarFormat: _calendarFormat,
-          selectedDayPredicate: (day) {
-            return isSameDay(_selectedDay, day);
-          },
-          onDaySelected: (selectedDay, focusedDay) {
-            setState(() {
-              _selectedDay = selectedDay;
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TableCalendar(
+            firstDay: DateTime.utc(2010, 10, 16),
+            lastDay: DateTime.utc(2030, 3, 14),
+            focusedDay: _focusedDay,
+            calendarFormat: _calendarFormat,
+            selectedDayPredicate: (day) {
+              return isSameDay(_selectedDay, day);
+            },
+            onDaySelected: (selectedDay, focusedDay) {
+              setState(() {
+                _selectedDay = selectedDay;
+                _focusedDay = focusedDay;
+              });
+            },
+            onFormatChanged: (format) {
+              setState(() {
+                _calendarFormat = format;
+              });
+            },
+            onPageChanged: (focusedDay) {
               _focusedDay = focusedDay;
-            });
-          },
-          onFormatChanged: (format) {
-            setState(() {
-              _calendarFormat = format;
-            });
-          },
-          onPageChanged: (focusedDay) {
-            _focusedDay = focusedDay;
-          },
-        ),
-        Container(
-          alignment: Alignment.center,
-          child: TextField(
-            decoration: InputDecoration(labelText: 'Terminbeschreibung'),
+            },
+          ),
+          SizedBox(height: 16),
+          TextField(
+            decoration: InputDecoration(
+              labelText: 'Terminbeschreibung',
+              border: OutlineInputBorder(),
+            ),
             onChanged: (value) {
               setState(() {
                 _newAppointmentDescription = value;
               });
             },
           ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            IconButton(
-              icon: Icon(Icons.calendar_today),
-              onPressed: () async {
-                final DateTime? picked = await showDatePicker(
-                  context: context,
-                  initialDate: _selectedDay ?? DateTime.now(),
-                  firstDate: DateTime(2010, 10, 16),
-                  lastDate: DateTime(2030, 3, 14),
-                );
+          SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ElevatedButton.icon(
+                onPressed: () async {
+                  final DateTime? picked = await showDatePicker(
+                    context: context,
+                    initialDate: _selectedDay ?? DateTime.now(),
+                    firstDate: DateTime(2010, 10, 16),
+                    lastDate: DateTime(2030, 3, 14),
+                  );
 
-                if (picked != null && picked != _selectedDay) {
-                  setState(() {
-                    _selectedDay = picked;
-                  });
-                }
-              },
-            ),
-            Text(
-              'Uhrzeit: ${_selectedTime.format(context)}',
-              style: TextStyle(fontSize: 16),
-            ),
-            IconButton(
-              icon: Icon(Icons.access_time),
-              onPressed: () => _selectTime(context),
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: _addAppointment,
-              child: Text('Termin hinzufügen'),
-            ),
-          ],
-        )
-      ],
+                  if (picked != null && picked != _selectedDay) {
+                    setState(() {
+                      _selectedDay = picked;
+                    });
+                  }
+                },
+                icon: Icon(Icons.calendar_today),
+                label: Text('Datum auswählen'),
+              ),
+              ElevatedButton.icon(
+                onPressed: () => _selectTime(context),
+                icon: Icon(Icons.access_time),
+                label: Text('Uhrzeit auswählen'),
+              ),
+            ],
+          ),
+          SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: _addAppointment,
+                child: Text('Termin hinzufügen'),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
