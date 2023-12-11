@@ -10,11 +10,13 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<AppointmentModel>(
       builder: (context, appointmentModel, child) {
-        final upcomingAppointments = appointmentModel.appointments.where(
-          (appointment) =>
-              appointment.date.isAfter(DateTime.now()) &&
-              appointment.date.isBefore(DateTime.now().add(Duration(days: 7))),
-        );
+        final upcomingAppointments = appointmentModel.appointments
+            .where(
+              (appointment) =>
+                  appointment.date.isAfter(DateTime.now()) &&
+                  appointment.date.isBefore(DateTime.now().add(Duration(days: 7))),
+            )
+            .toList();
 
         return Scaffold(
           appBar: AppBar(
@@ -44,8 +46,9 @@ class HomePage extends StatelessWidget {
                           ),
                           trailing: IconButton(
                             icon: Icon(Icons.delete),
-                            onPressed: () =>
-                                appointmentModel.removeAppointment(appointment),
+                            onPressed: () {
+                              appointmentModel.removeAppointment(appointment);
+                            },
                           ),
                         ),
                       );
