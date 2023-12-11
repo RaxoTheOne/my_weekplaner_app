@@ -11,8 +11,8 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   String _selectedLanguage = 'Deutsch';
   String _selectedDateFormat = 'DD/MM/YYYY';
-  String _selectedTimeFormat = '12-Stunden';
-  String _selectedFirstDay = 'Sonntag';
+  String _selectedTimeFormat = '24-Stunden';
+  String _selectedFirstDay = 'Montag';
 
   @override
   Widget build(BuildContext context) {
