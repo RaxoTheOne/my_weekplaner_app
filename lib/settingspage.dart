@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_weekplaner_app/main.dart';
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -97,7 +96,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 _selectedFirstDay = newValue!;
               });
             },
-            items: <String>['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag']
+            items: <String>['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag']
                 .map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
@@ -112,5 +111,23 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
       ],
     );
+  }
+}
+
+class SettingsModel extends ChangeNotifier {
+  bool _notificationsOn = false;
+  bool _darkModeOn = false;
+  
+  bool get notificationsOn => _notificationsOn;
+  bool get darkModeOn => _darkModeOn;
+
+  void setNotificationsOn(bool value) {
+    _notificationsOn = value;
+    notifyListeners();
+  }
+
+  void setDarkModeOn(bool value) {
+    _darkModeOn = value;
+    notifyListeners();
   }
 }

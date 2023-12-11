@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:my_weekplaner_app/calenderpage.dart';
 import 'package:my_weekplaner_app/firebase_options.dart';
+import 'package:my_weekplaner_app/settingspage.dart';
 import 'package:my_weekplaner_app/splashscreen.dart';
 import 'package:provider/provider.dart';
 
@@ -51,20 +52,3 @@ class MeineApp extends StatelessWidget {
 }
 
 
-class SettingsModel extends ChangeNotifier {
-  bool _notificationsOn = false;
-  bool _darkModeOn = false;
-
-  bool get notificationsOn => _notificationsOn;
-  bool get darkModeOn => _darkModeOn;
-
-  void setNotificationsOn(bool value) {
-    _notificationsOn = value;
-    notifyListeners();
-  }
-
-  void setDarkModeOn(bool value) {
-    _darkModeOn = value;
-    notifyListeners();
-  }
-}
