@@ -1,6 +1,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:my_weekplaner_app/calenderpage.dart';
 import 'package:my_weekplaner_app/firebase_options.dart';
 import 'package:my_weekplaner_app/splashscreen.dart';
 import 'package:provider/provider.dart';
@@ -49,35 +50,6 @@ class MeineApp extends StatelessWidget {
   }
 }
 
-class Appointment {
-  final DateTime date;
-  final TimeOfDay time;
-  final String description;
-
-  Appointment({
-    required this.date,
-    required this.time,
-    required this.description,
-  });
-}
-
-class AppointmentModel extends ChangeNotifier {
-  List<Appointment> _appointments = [];
-
-  List<Appointment> get appointments => _appointments;
-
-  void addAppointment(Appointment appointment) {
-    _appointments.add(appointment);
-    notifyListeners();
-  }
-
-  void removeAppointment(Appointment appointment) {
-    if (_appointments.contains(appointment)) {
-      _appointments.remove(appointment);
-      notifyListeners();
-    }
-  }
-}
 
 class SettingsModel extends ChangeNotifier {
   bool _notificationsOn = false;
