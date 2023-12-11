@@ -4,27 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Appointment {
-  DateTime date;
-  TimeOfDay time;
-  String description;
 
-  Appointment({required this.date, required this.time, required this.description});
-
-  String toString() {
-    return '$date#${time.hour}:${time.minute}#$description';
-  }
-
-  static Appointment fromString(String appointmentString) {
-    final parts = appointmentString.split('#');
-    final date = DateTime.parse(parts[0]);
-    final timeParts = parts[1].split(':');
-    final time = TimeOfDay(hour: int.parse(timeParts[0]), minute: int.parse(timeParts[1]));
-    final description = parts[2];
-
-    return Appointment(date: date, time: time, description: description);
-  }
-}
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({Key? key}) : super(key: key);
