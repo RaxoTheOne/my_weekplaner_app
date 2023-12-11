@@ -1,87 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:my_weekplaner_app/apointment_model.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-class Appointment {
-  DateTime date;
-  TimeOfDay time;
-  String description;
-
-  Appointment({
-    required this.date,
-    required this.time,
-    required this.description,
-  });
-
-  // Methode zum Konvertieren der Daten in einen String
-  String toString() {
-    return '$date $time $description';
-  }
-
-  // Methode zum Erstellen eines Appointment-Objekts aus einem String
-  static Appointment fromString(String appointmentString) {
-    final parts = appointmentString.split(' ');
-    final date = DateTime.parse(parts[0]);
-    final time = TimeOfDay(
-      hour: int.parse(parts[1]),
-      minute: int.parse(parts[2]),
-    );
-    final description = parts[3];
-
-    return Appointment(
-      date: date,
-      time: time,
-      description: description,
-    );
-  }
-}
-
-class AppointmentModel extends ChangeNotifier {
-  List<Appointment> _appointments = [];
-
-  List<Appointment> get appointments => _appointments;
-
-  // Methode zum Hinzufügen eines Termins
-  void addAppointment(Appointment appointment) {
-    _appointments.add(appointment);
-    _saveAppointments();
-    notifyListeners();
-  }
-
-  // Methode zum Entfernen eines einzelnen Termins
-  void removeAppointment(Appointment appointment) {
-    _appointments.remove(appointment);
-    _saveAppointments();
-    notifyListeners();
-  }
-
-  // Methode zum Entfernen aller Termine an einem bestimmten Datum
-  void removeAppointmentsOnDate(DateTime date) {
-    _appointments.removeWhere((appointment) => isSameDay(appointment.date, date));
-    _saveAppointments();
-    notifyListeners();
-  }
-
-  // Methode zum Speichern der Termine in SharedPreferences
-  Future<void> _saveAppointments() async {
-    final prefs = await SharedPreferences.getInstance();
-    final appointmentStrings = _appointments.map((appointment) => appointment.toString()).toList();
-    prefs.setStringList('appointments', appointmentStrings);
-  }
-
-  // Methode zum Laden der Termine aus SharedPreferences
-  Future<void> loadAppointments() async {
-    final prefs = await SharedPreferences.getInstance();
-    final savedAppointments = prefs.getStringList('appointments');
-
-    if (savedAppointments != null) {
-      _appointments = savedAppointments.map((appointmentString) => Appointment.fromString(appointmentString)).toList();
-      notifyListeners();
-    }
-  }
-}
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({Key? key}) : super(key: key);
@@ -104,29 +25,8 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   void _loadAppointments() async {
-    final prefs = await SharedPreferences.getInstance();
-    final savedAppointments = prefs.getStringList('appointments');
-
-    if (savedAppointments != null) {
-      final appointmentModel =
-          Provider.of<AppointmentModel>(context, listen: false);
-
-      for (final appointmentString in savedAppointments) {
-        final appointment = Appointment.fromString(appointmentString);
-        appointmentModel.addAppointment(appointment);
-      }
-    }
-  }
-
-  void _saveAppointments() async {
-    final prefs = await SharedPreferences.getInstance();
-    final appointmentModel =
-        Provider.of<AppointmentModel>(context, listen: false);
-
-    final appointmentStrings = appointmentModel.appointments
-        .map((appointment) => appointment.toString())
-        .toList();
-    prefs.setStringList('appointments', appointmentStrings);
+    final appointmentModel = Provider.of<AppointmentModel>(context, listen: false);
+    await appointmentModel.loadAppointments();
   }
 
   Future<void> _selectTime(BuildContext context) async {
@@ -144,8 +44,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
   void _addAppointment() {
     if (_selectedDay != null && _newAppointmentDescription.isNotEmpty) {
-      final appointmentModel =
-          Provider.of<AppointmentModel>(context, listen: false);
+      final appointmentModel = Provider.of<AppointmentModel>(context, listen: false);
       appointmentModel.addAppointment(Appointment(
         date: _selectedDay!,
         time: _selectedTime,
@@ -161,17 +60,20 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   void _removeAppointmentsOnDate(DateTime date) {
-    final appointmentModel =
-        Provider.of<AppointmentModel>(context, listen: false);
+    final appointmentModel = Provider.of<AppointmentModel>(context, listen: false);
     appointmentModel.removeAppointmentsOnDate(date);
     _saveAppointments();
   }
 
   void _removeAppointment(Appointment appointment) {
-    final appointmentModel =
-        Provider.of<AppointmentModel>(context, listen: false);
+    final appointmentModel = Provider.of<AppointmentModel>(context, listen: false);
     appointmentModel.removeAppointment(appointment);
     _saveAppointments();
+  }
+
+  Future<void> _saveAppointments() async {
+    final appointmentModel = Provider.of<AppointmentModel>(context, listen: false);
+    await appointmentModel.saveAppointments();
   }
 
   @override
@@ -291,18 +193,16 @@ class _CalendarPageState extends State<CalendarPage> {
                       : ListView(
                           children: appointmentsOnSelectedDay
                               .map(
-                                (appointment) => Card(
-                                  child: ListTile(
-                                    leading: Icon(Icons.event),
-                                    title: Text(appointment.description),
-                                    subtitle: Text(
-                                      '${appointment.time.format(context)}',
-                                    ),
-                                    trailing: IconButton(
-                                      icon: Icon(Icons.delete),
-                                      onPressed: () =>
-                                          _removeAppointment(appointment),
-                                    ),
+                                (appointment) => ListTile(
+                                  tileColor: Colors.grey[200],
+                                  title: Text(appointment.description),
+                                  subtitle: Text(
+                                    '${appointment.time.format(context)}',
+                                  ),
+                                  trailing: IconButton(
+                                    icon: Icon(Icons.delete),
+                                    onPressed: () =>
+                                        _removeAppointment(appointment),
                                   ),
                                 ),
                               )
