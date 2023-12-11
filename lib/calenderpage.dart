@@ -1,7 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:my_weekplaner_app/main.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class Appointment {
+  DateTime date;
+  TimeOfDay time;
+  String description;
+
+  Appointment({required this.date, required this.time, required this.description});
+
+  String toString() {
+    return '$date#${time.hour}:${time.minute}#$description';
+  }
+
+  static Appointment fromString(String appointmentString) {
+    final parts = appointmentString.split('#');
+    final date = DateTime.parse(parts[0]);
+    final timeParts = parts[1].split(':');
+    final time = TimeOfDay(hour: int.parse(timeParts[0]), minute: int.parse(timeParts[1]));
+    final description = parts[2];
+
+    return Appointment(date: date, time: time, description: description);
+  }
+}
+
+class AppointmentModel extends ChangeNotifier {
+  List<Appointment> _appointments = [];
+
+  List<Appointment> get appointments => _appointments;
+
+  void addAppointment(Appointment appointment) {
+    _appointments.add(appointment);
+    notifyListeners();
+  }
+
+  removeAppointment(Appointment appointment) {}
+}
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({Key? key}) : super(key: key);
@@ -16,6 +51,34 @@ class _CalendarPageState extends State<CalendarPage> {
   DateTime? _selectedDay;
   TimeOfDay _selectedTime = TimeOfDay.now();
   String _newAppointmentDescription = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAppointments();
+  }
+
+  void _loadAppointments() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedAppointments = prefs.getStringList('appointments');
+
+    if (savedAppointments != null) {
+      final appointmentModel = Provider.of<AppointmentModel>(context, listen: false);
+
+      for (final appointmentString in savedAppointments) {
+        final appointment = Appointment.fromString(appointmentString);
+        appointmentModel.addAppointment(appointment);
+      }
+    }
+  }
+
+  void _saveAppointments() async {
+    final prefs = await SharedPreferences.getInstance();
+    final appointmentModel = Provider.of<AppointmentModel>(context, listen: false);
+
+    final appointmentStrings = appointmentModel.appointments.map((appointment) => appointment.toString()).toList();
+    prefs.setStringList('appointments', appointmentStrings);
+  }
 
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
@@ -32,8 +95,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
   void _addAppointment() {
     if (_selectedDay != null && _newAppointmentDescription.isNotEmpty) {
-      final appointmentModel =
-          Provider.of<AppointmentModel>(context, listen: false);
+      final appointmentModel = Provider.of<AppointmentModel>(context, listen: false);
       appointmentModel.addAppointment(Appointment(
         date: _selectedDay!,
         time: _selectedTime,
@@ -44,6 +106,7 @@ class _CalendarPageState extends State<CalendarPage> {
         _selectedTime = TimeOfDay.now();
         _selectedDay = null;
       });
+      _saveAppointments();
     }
   }
 

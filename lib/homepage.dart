@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:my_weekplaner_app/main.dart';
+import 'package:my_weekplaner_app/calenderpage.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
