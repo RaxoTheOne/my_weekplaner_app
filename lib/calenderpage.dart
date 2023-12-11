@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_weekplaner_app/main.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,19 +24,6 @@ class Appointment {
 
     return Appointment(date: date, time: time, description: description);
   }
-}
-
-class AppointmentModel extends ChangeNotifier {
-  List<Appointment> _appointments = [];
-
-  List<Appointment> get appointments => _appointments;
-
-  void addAppointment(Appointment appointment) {
-    _appointments.add(appointment);
-    notifyListeners();
-  }
-
-  removeAppointment(Appointment appointment) {}
 }
 
 class CalendarPage extends StatefulWidget {

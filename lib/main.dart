@@ -50,6 +50,19 @@ class MeineApp extends StatelessWidget {
   }
 }
 
+class AppointmentModel extends ChangeNotifier {
+  List<Appointment> _appointments = [];
+
+  List<Appointment> get appointments => _appointments;
+
+  void addAppointment(Appointment appointment) {
+    _appointments.add(appointment);
+    notifyListeners();
+  }
+
+  removeAppointment(Appointment appointment) {}
+}
+
 
 class SettingsModel extends ChangeNotifier {
   bool _notificationsOn = false;
