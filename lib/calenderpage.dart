@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:my_weekplaner_app/main.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({Key? key}) : super(key: key);
@@ -19,34 +16,6 @@ class _CalendarPageState extends State<CalendarPage> {
   DateTime? _selectedDay;
   TimeOfDay _selectedTime = TimeOfDay.now();
   String _newAppointmentDescription = '';
-
-  @override
-  void initState() {
-    super.initState();
-    _loadAppointments();
-  }
-
-  void _loadAppointments() async {
-    final prefs = await SharedPreferences.getInstance();
-    final savedAppointments = prefs.getStringList('appointments');
-
-    if (savedAppointments != null) {
-      final appointmentModel = Provider.of<AppointmentModel>(context, listen: false);
-
-      for (final appointmentString in savedAppointments) {
-        final appointment = Appointment.fromString(appointmentString);
-        appointmentModel.addAppointment(appointment);
-      }
-    }
-  }
-
-  void _saveAppointments() async {
-    final prefs = await SharedPreferences.getInstance();
-    final appointmentModel = Provider.of<AppointmentModel>(context, listen: false);
-
-    final appointmentStrings = appointmentModel.appointments.map((appointment) => appointment.toString()).toList();
-    prefs.setStringList('appointments', appointmentStrings);
-  }
 
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
@@ -63,7 +32,8 @@ class _CalendarPageState extends State<CalendarPage> {
 
   void _addAppointment() {
     if (_selectedDay != null && _newAppointmentDescription.isNotEmpty) {
-      final appointmentModel = Provider.of<AppointmentModel>(context, listen: false);
+      final appointmentModel =
+          Provider.of<AppointmentModel>(context, listen: false);
       appointmentModel.addAppointment(Appointment(
         date: _selectedDay!,
         time: _selectedTime,
@@ -74,7 +44,6 @@ class _CalendarPageState extends State<CalendarPage> {
         _selectedTime = TimeOfDay.now();
         _selectedDay = null;
       });
-      _saveAppointments();
     }
   }
 

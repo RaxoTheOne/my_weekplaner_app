@@ -1,21 +1,8 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:my_weekplaner_app/firebase_options.dart';
 import 'package:my_weekplaner_app/splashscreen.dart';
 import 'package:provider/provider.dart';
 
-void main() async{
-  WidgetsFlutterBinding.ensureInitialized();
-  try {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-
-    FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
-  } catch (e) {
-    print("Failed to initialize Firebase: $e");
-  }
+void main() {
   runApp(
     MultiProvider(
       providers: [
@@ -50,25 +37,15 @@ class MeineApp extends StatelessWidget {
 }
 
 class Appointment {
-  DateTime date;
-  TimeOfDay time;
-  String description;
+  final DateTime date;
+  final TimeOfDay time;
+  final String description;
 
-  Appointment({required this.date, required this.time, required this.description});
-
-  String toString() {
-    return '$date#${time.hour}:${time.minute}#$description';
-  }
-
-  static Appointment fromString(String appointmentString) {
-    final parts = appointmentString.split('#');
-    final date = DateTime.parse(parts[0]);
-    final timeParts = parts[1].split(':');
-    final time = TimeOfDay(hour: int.parse(timeParts[0]), minute: int.parse(timeParts[1]));
-    final description = parts[2];
-
-    return Appointment(date: date, time: time, description: description);
-  }
+  Appointment({
+    required this.date,
+    required this.time,
+    required this.description,
+  });
 }
 
 class AppointmentModel extends ChangeNotifier {
@@ -82,11 +59,12 @@ class AppointmentModel extends ChangeNotifier {
   }
 
   void removeAppointment(Appointment appointment) {
-    _appointments.remove(appointment);
-    notifyListeners();
+    if (_appointments.contains(appointment)) {
+      _appointments.remove(appointment);
+      notifyListeners();
+    }
   }
 }
-
 
 class SettingsModel extends ChangeNotifier {
   bool _notificationsOn = false;
