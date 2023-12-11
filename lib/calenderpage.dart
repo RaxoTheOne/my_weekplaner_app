@@ -39,24 +39,47 @@ class Appointment {
 }
 
 class AppointmentModel extends ChangeNotifier {
-  List<Appointment> appointments = [];
+  List<Appointment> _appointments = [];
+
+  List<Appointment> get appointments => _appointments;
 
   // Methode zum Hinzufügen eines Termins
   void addAppointment(Appointment appointment) {
-    appointments.add(appointment);
+    _appointments.add(appointment);
+    _saveAppointments();
     notifyListeners();
   }
 
   // Methode zum Entfernen eines einzelnen Termins
   void removeAppointment(Appointment appointment) {
-    appointments.remove(appointment);
+    _appointments.remove(appointment);
+    _saveAppointments();
     notifyListeners();
   }
 
   // Methode zum Entfernen aller Termine an einem bestimmten Datum
   void removeAppointmentsOnDate(DateTime date) {
-    appointments.removeWhere((appointment) => isSameDay(appointment.date, date));
+    _appointments.removeWhere((appointment) => isSameDay(appointment.date, date));
+    _saveAppointments();
     notifyListeners();
+  }
+
+  // Methode zum Speichern der Termine in SharedPreferences
+  Future<void> _saveAppointments() async {
+    final prefs = await SharedPreferences.getInstance();
+    final appointmentStrings = _appointments.map((appointment) => appointment.toString()).toList();
+    prefs.setStringList('appointments', appointmentStrings);
+  }
+
+  // Methode zum Laden der Termine aus SharedPreferences
+  Future<void> loadAppointments() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedAppointments = prefs.getStringList('appointments');
+
+    if (savedAppointments != null) {
+      _appointments = savedAppointments.map((appointmentString) => Appointment.fromString(appointmentString)).toList();
+      notifyListeners();
+    }
   }
 }
 
