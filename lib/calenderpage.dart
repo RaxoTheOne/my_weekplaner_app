@@ -154,7 +154,7 @@ class _CalendarPageState extends State<CalendarPage> {
           SizedBox(height: 10),
           if (_selectedDay != null)
             Text(
-              'Termine am ${DateFormat('yMMMd').format(_selectedDay!)}:',
+              'Termine am ${DateFormat('MMMM d, y').format(_selectedDay!)}:',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           if (_selectedDay != null)
