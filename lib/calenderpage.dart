@@ -25,7 +25,8 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   void _loadAppointments() async {
-    final appointmentModel = Provider.of<AppointmentModel>(context, listen: false);
+    final appointmentModel =
+        Provider.of<AppointmentModel>(context, listen: false);
     await appointmentModel.loadAppointments();
   }
 
@@ -44,7 +45,8 @@ class _CalendarPageState extends State<CalendarPage> {
 
   void _addAppointment() {
     if (_selectedDay != null && _newAppointmentDescription.isNotEmpty) {
-      final appointmentModel = Provider.of<AppointmentModel>(context, listen: false);
+      final appointmentModel =
+          Provider.of<AppointmentModel>(context, listen: false);
       appointmentModel.addAppointment(Appointment(
         date: _selectedDay!,
         time: _selectedTime,
@@ -60,19 +62,22 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   void _removeAppointmentsOnDate(DateTime date) {
-    final appointmentModel = Provider.of<AppointmentModel>(context, listen: false);
+    final appointmentModel =
+        Provider.of<AppointmentModel>(context, listen: false);
     appointmentModel.removeAppointmentsOnDate(date);
     _saveAppointments();
   }
 
   void _removeAppointment(Appointment appointment) {
-    final appointmentModel = Provider.of<AppointmentModel>(context, listen: false);
+    final appointmentModel =
+        Provider.of<AppointmentModel>(context, listen: false);
     appointmentModel.removeAppointment(appointment);
     _saveAppointments();
   }
 
   Future<void> _saveAppointments() async {
-    final appointmentModel = Provider.of<AppointmentModel>(context, listen: false);
+    final appointmentModel =
+        Provider.of<AppointmentModel>(context, listen: false);
     await appointmentModel.saveAppointments();
   }
 
@@ -161,8 +166,10 @@ class _CalendarPageState extends State<CalendarPage> {
             Expanded(
               child: Consumer<AppointmentModel>(
                 builder: (context, appointmentModel, child) {
-                  final appointmentsOnSelectedDay = appointmentModel.appointments
-                      .where((appointment) => isSameDay(appointment.date, _selectedDay))
+                  final appointmentsOnSelectedDay = appointmentModel
+                      .appointments
+                      .where((appointment) =>
+                          isSameDay(appointment.date, _selectedDay))
                       .toList();
 
                   return appointmentsOnSelectedDay.isEmpty
