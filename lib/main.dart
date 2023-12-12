@@ -7,7 +7,7 @@ import 'package:my_weekplaner_app/settingspage.dart';
 import 'package:my_weekplaner_app/splashscreen.dart';
 import 'package:provider/provider.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
     await Firebase.initializeApp(
@@ -50,5 +50,3 @@ class MeineApp extends StatelessWidget {
     );
   }
 }
-
-
