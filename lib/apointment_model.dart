@@ -19,10 +19,10 @@ class Appointment {
 
   static Appointment fromString(String appointmentString) {
     final parts = appointmentString.split(' ');
-    final date = DateTime.parse(parts[0]);
+    final date = DateTime.parse(parts[0] + ' ' + parts[1] + ' ' + parts[2] + ' ' + parts[3]);
     final time = TimeOfDay(
-      hour: int.parse(parts[1]),
-      minute: int.parse(parts[2]),
+      hour: int.parse(parts[4]),
+      minute: int.parse(parts[5]),
     );
     final description = parts[3];
 
