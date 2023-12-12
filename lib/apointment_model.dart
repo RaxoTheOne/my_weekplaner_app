@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -17,14 +18,19 @@ class Appointment {
     return '$date $time $description';
   }
 
+  static DateTime parseDate(String dateString) {
+    final dateFormat = DateFormat('yyyy-MM-dd');
+    return dateFormat.parse(dateString);
+  }
+
   static Appointment fromString(String appointmentString) {
     final parts = appointmentString.split(' ');
-    final date = DateTime.parse(parts[0] + ' ' + parts[1] + ' ' + parts[2] + ' ' + parts[3]);
+    final date = parseDate(parts[0]);
     final time = TimeOfDay(
-      hour: int.parse(parts[4]),
-      minute: int.parse(parts[5]),
+      hour: int.parse(parts[1].split(':')[0]),
+      minute: int.parse(parts[1].split(':')[1]),
     );
-    final description = parts[3];
+    final description = parts[2];
 
     return Appointment(
       date: date,

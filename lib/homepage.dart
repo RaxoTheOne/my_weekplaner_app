@@ -20,6 +20,7 @@ class HomePage extends StatelessWidget {
 
         return Scaffold(
           appBar: AppBar(
+            backgroundColor: Colors.grey,
             title: Text('Meine Termine'),
           ),
           body: Column(
