@@ -79,7 +79,7 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(13.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -106,7 +106,7 @@ class _CalendarPageState extends State<CalendarPage> {
               _focusedDay = focusedDay;
             },
           ),
-          SizedBox(height: 16),
+          SizedBox(height: 10),
           TextField(
             decoration: InputDecoration(
               labelText: 'Terminbeschreibung',
@@ -118,28 +118,10 @@ class _CalendarPageState extends State<CalendarPage> {
               });
             },
           ),
-          SizedBox(height: 16),
+          SizedBox(height: 10),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ElevatedButton.icon(
-                onPressed: () async {
-                  final DateTime? picked = await showDatePicker(
-                    context: context,
-                    initialDate: _selectedDay ?? DateTime.now(),
-                    firstDate: DateTime(2010, 10, 16),
-                    lastDate: DateTime(2030, 3, 14),
-                  );
-
-                  if (picked != null && picked != _selectedDay) {
-                    setState(() {
-                      _selectedDay = picked;
-                    });
-                  }
-                },
-                icon: Icon(Icons.calendar_today),
-                label: Text('Datum auswählen'),
-              ),
               ElevatedButton.icon(
                 onPressed: () => _selectTime(context),
                 icon: Icon(Icons.access_time),
@@ -147,7 +129,7 @@ class _CalendarPageState extends State<CalendarPage> {
               ),
             ],
           ),
-          SizedBox(height: 16),
+          SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -155,7 +137,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 onPressed: _addAppointment,
                 child: Text('Termin hinzufügen'),
               ),
-              SizedBox(width: 16),
+              SizedBox(width: 10),
               ElevatedButton(
                 onPressed: () {
                   if (_selectedDay != null) {
@@ -169,7 +151,7 @@ class _CalendarPageState extends State<CalendarPage> {
               ),
             ],
           ),
-          SizedBox(height: 16),
+          SizedBox(height: 10),
           if (_selectedDay != null)
             Text(
               'Termine am ${DateFormat('yMMMd').format(_selectedDay!)}:',
