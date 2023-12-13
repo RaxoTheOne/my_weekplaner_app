@@ -186,7 +186,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                   tileColor: Colors.grey[200],
                                   title: Text(appointment.description),
                                   subtitle: Text(
-                                    '${appointment.time.format(context)}',
+                                    '${DateFormat('HH:mm').format(DateTime(2023, 1, 1, appointment.time.hour, appointment.time.minute))}',
                                   ),
                                   trailing: IconButton(
                                     icon: Icon(Icons.delete),
