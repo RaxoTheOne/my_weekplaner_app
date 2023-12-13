@@ -163,42 +163,40 @@ class _CalendarPageState extends State<CalendarPage> {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           if (_selectedDay != null)
-            Expanded(
-              child: Consumer<AppointmentModel>(
-                builder: (context, appointmentModel, child) {
-                  final appointmentsOnSelectedDay = appointmentModel
-                      .appointments
-                      .where((appointment) =>
-                          isSameDay(appointment.date, _selectedDay))
-                      .toList();
+            Consumer<AppointmentModel>(
+              builder: (context, appointmentModel, child) {
+                final appointmentsOnSelectedDay = appointmentModel
+                    .appointments
+                    .where((appointment) =>
+                        isSameDay(appointment.date, _selectedDay))
+                    .toList();
 
-                  return appointmentsOnSelectedDay.isEmpty
-                      ? Center(
-                          child: Text(
-                            'Keine Termine an diesem Tag',
-                            style: TextStyle(fontSize: 17),
-                          ),
-                        )
-                      : ListView(
-                          children: appointmentsOnSelectedDay
-                              .map(
-                                (appointment) => ListTile(
-                                  tileColor: Colors.grey[200],
-                                  title: Text(appointment.description),
-                                  subtitle: Text(
-                                    '${DateFormat('HH:mm').format(DateTime(2023, 1, 1, appointment.time.hour, appointment.time.minute))}',
-                                  ),
-                                  trailing: IconButton(
-                                    icon: Icon(Icons.delete),
-                                    onPressed: () =>
-                                        _removeAppointment(appointment),
-                                  ),
+                return appointmentsOnSelectedDay.isEmpty
+                    ? Center(
+                        child: Text(
+                          'Keine Termine an diesem Tag',
+                          style: TextStyle(fontSize: 17),
+                        ),
+                      )
+                    : Column(
+                        children: appointmentsOnSelectedDay
+                            .map(
+                              (appointment) => ListTile(
+                                tileColor: Colors.grey[200],
+                                title: Text(appointment.description),
+                                subtitle: Text(
+                                  '${DateFormat('HH:mm').format(DateTime(2023, 1, 1, appointment.time.hour, appointment.time.minute))}',
                                 ),
-                              )
-                              .toList(),
-                        );
-                },
-              ),
+                                trailing: IconButton(
+                                  icon: Icon(Icons.delete),
+                                  onPressed: () =>
+                                      _removeAppointment(appointment),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      );
+              },
             ),
         ],
       ),
