@@ -52,6 +52,7 @@ class HomePage extends StatelessWidget {
                             icon: Icon(Icons.delete),
                             onPressed: () {
                               appointmentModel.removeAppointment(appointment);
+                              _updateInteractionStatus(context);
                             },
                           ),
                         ),
@@ -64,5 +65,10 @@ class HomePage extends StatelessWidget {
         );
       },
     );
+  }
+
+  void _updateInteractionStatus(BuildContext context) async {
+    final appointmentModel = Provider.of<AppointmentModel>(context, listen: false);
+    await appointmentModel.saveAppointments(); // Speichern des Interaktionsstatus
   }
 }
