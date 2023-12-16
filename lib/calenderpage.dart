@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:my_weekplaner_app/apointment_model.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarPage extends StatefulWidget {
@@ -185,7 +185,7 @@ class _CalendarPageState extends State<CalendarPage> {
                             .map(
                               (appointment) => ListTile(
                                 tileColor: Colors.grey[200],
-                                title: Text(appointment.description),
+                                title: Text(appointment.description), // Änderung hier
                                 subtitle: Text(
                                   '${DateFormat('HH:mm').format(DateTime(2023, 1, 1, appointment.time.hour, appointment.time.minute))}',
                                 ),
