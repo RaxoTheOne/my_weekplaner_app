@@ -50,6 +50,7 @@ class AppointmentModel extends ChangeNotifier {
   void addAppointment(Appointment appointment) {
     _appointments.add(appointment);
     notifyListeners();
+    _updateInteractionStatus(true); // Beispiel für Interaktion
   }
 
   void removeAppointment(Appointment appointment) {
