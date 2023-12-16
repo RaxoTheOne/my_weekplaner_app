@@ -16,7 +16,7 @@ class _CalendarPageState extends State<CalendarPage> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   TimeOfDay _selectedTime = TimeOfDay.now();
-  String _newAppointmentDescription = '';
+  TextEditingController _descriptionController = TextEditingController();
 
   @override
   void initState() {
@@ -30,7 +30,7 @@ class _CalendarPageState extends State<CalendarPage> {
     await appointmentModel.loadAppointments();
   }
 
-  Future<void> _selectTime(BuildContext context) async {
+  void _selectTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: _selectedTime,
@@ -44,16 +44,16 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   void _addAppointment() {
-    if (_selectedDay != null && _newAppointmentDescription.isNotEmpty) {
+    if (_selectedDay != null && _descriptionController.text.isNotEmpty) {
       final appointmentModel =
           Provider.of<AppointmentModel>(context, listen: false);
       appointmentModel.addAppointment(Appointment(
         date: _selectedDay!,
         time: _selectedTime,
-        description: _newAppointmentDescription,
+        description: _descriptionController.text,
       ));
       setState(() {
-        _newAppointmentDescription = '';
+        _descriptionController.text = '';
         _selectedTime = TimeOfDay.now();
         _selectedDay = null;
       });
@@ -113,14 +113,16 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
           SizedBox(height: 10),
           TextField(
+            controller: _descriptionController,
             decoration: InputDecoration(
               labelText: 'Terminbeschreibung',
               border: OutlineInputBorder(),
             ),
             onChanged: (value) {
-              setState(() {
-                _newAppointmentDescription = value;
-              });
+              // Nicht mehr benötigt, da der Wert im _addAppointment direkt gesetzt wird.
+              // setState(() {
+              //   _newAppointmentDescription = value;
+              // });
             },
           ),
           SizedBox(height: 10),
