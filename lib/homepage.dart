@@ -10,13 +10,16 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<AppointmentModel>(
       builder: (context, appointmentModel, child) {
-        final upcomingAppointments = appointmentModel.appointments
+        List<Appointment> upcomingAppointments = appointmentModel.appointments
             .where(
               (appointment) =>
                   appointment.date.isAfter(DateTime.now()) &&
                   appointment.date.isBefore(DateTime.now().add(Duration(days: 7))),
             )
             .toList();
+
+        // Sortiere die Termine nach Datum
+        upcomingAppointments.sort((a, b) => a.date.compareTo(b.date));
 
         return Scaffold(
           appBar: AppBar(
