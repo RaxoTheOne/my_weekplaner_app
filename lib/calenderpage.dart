@@ -162,8 +162,7 @@ class _CalendarPageState extends State<CalendarPage> {
           if (_selectedDay != null)
             Consumer<AppointmentModel>(
               builder: (context, appointmentModel, child) {
-                final appointmentsOnSelectedDay = appointmentModel
-                    .appointments
+                final appointmentsOnSelectedDay = appointmentModel.appointments
                     .where((appointment) =>
                         isSameDay(appointment.date, _selectedDay))
                     .toList();
