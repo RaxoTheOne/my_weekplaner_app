@@ -15,7 +15,6 @@ class _CalendarPageState extends State<CalendarPage> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  TimeOfDay _selectedTime = TimeOfDay.now();
   TextEditingController _descriptionController = TextEditingController();
 
   @override
@@ -33,28 +32,41 @@ class _CalendarPageState extends State<CalendarPage> {
   void _selectTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
-      initialTime: _selectedTime,
+      initialTime: TimeOfDay.now(),
     );
 
-    if (picked != null && picked != _selectedTime) {
+    if (picked != null) {
+      // Hier wird nur die Beschreibung ohne Uhrzeit hinzugefügt
+      final description = _descriptionController.text.trim();
+      if (description.isNotEmpty) {
+        final appointmentModel =
+            Provider.of<AppointmentModel>(context, listen: false);
+        appointmentModel.addAppointment(Appointment(
+          date: _selectedDay!,
+          description: description,
+        ));
+        _saveAppointments();
+      }
+
       setState(() {
-        _selectedTime = picked;
+        _descriptionController.text = '';
+        _selectedDay = null;
       });
     }
   }
 
   void _addAppointment() {
-    if (_selectedDay != null && _descriptionController.text.isNotEmpty) {
+    // Hier wird nur die Beschreibung ohne Uhrzeit hinzugefügt
+    final description = _descriptionController.text.trim();
+    if (_selectedDay != null && description.isNotEmpty) {
       final appointmentModel =
           Provider.of<AppointmentModel>(context, listen: false);
       appointmentModel.addAppointment(Appointment(
         date: _selectedDay!,
-        time: _selectedTime,
-        description: _descriptionController.text,
+        description: description,
       ));
       setState(() {
         _descriptionController.text = '';
-        _selectedTime = TimeOfDay.now();
         _selectedDay = null;
       });
       _saveAppointments();
@@ -118,12 +130,6 @@ class _CalendarPageState extends State<CalendarPage> {
               labelText: 'Terminbeschreibung',
               border: OutlineInputBorder(),
             ),
-            onChanged: (value) {
-              // Nicht mehr benötigt, da der Wert im _addAppointment direkt gesetzt wird.
-              // setState(() {
-              //   _newAppointmentDescription = value;
-              // });
-            },
           ),
           SizedBox(height: 10),
           Row(
@@ -185,10 +191,7 @@ class _CalendarPageState extends State<CalendarPage> {
                             .map(
                               (appointment) => ListTile(
                                 tileColor: Colors.grey[200],
-                                title: Text(appointment.description), // Änderung hier
-                                subtitle: Text(
-                                  '${DateFormat('HH:mm').format(DateTime(2023, 1, 1, appointment.time.hour, appointment.time.minute))}',
-                                ),
+                                title: Text(appointment.description),
                                 trailing: IconButton(
                                   icon: Icon(Icons.delete),
                                   onPressed: () =>
