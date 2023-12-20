@@ -42,34 +42,28 @@ class Appointment {
 
 class AppointmentModel extends ChangeNotifier {
   List<Appointment> _appointments = [];
-  bool _isInteractionDone = false; // Neues Feld für den Interaktionsstatus
 
   List<Appointment> get appointments => _appointments;
-  bool get isInteractionDone => _isInteractionDone; // Getter für den Interaktionsstatus
 
   void addAppointment(Appointment appointment) {
     _appointments.add(appointment);
     notifyListeners();
-    _updateInteractionStatus(true); // Beispiel für Interaktion
   }
 
   void removeAppointment(Appointment appointment) {
     _appointments.remove(appointment);
     notifyListeners();
-    _updateInteractionStatus(true); // Beispiel für Interaktion
   }
 
   void removeAppointmentsOnDate(DateTime date) {
     _appointments.removeWhere((appointment) => isSameDay(appointment.date, date));
     notifyListeners();
-    _updateInteractionStatus(true); // Beispiel für Interaktion
   }
 
   Future<void> saveAppointments() async {
     final prefs = await SharedPreferences.getInstance();
     final appointmentStrings = _appointments.map((appointment) => appointment.toString()).toList();
     prefs.setStringList('appointments', appointmentStrings);
-    prefs.setBool('isInteractionDone', _isInteractionDone); // Speichere den Interaktionsstatus
   }
 
   Future<void> loadAppointments() async {
@@ -80,12 +74,5 @@ class AppointmentModel extends ChangeNotifier {
       _appointments = savedAppointments.map((appointmentString) => Appointment.fromString(appointmentString)).toList();
       notifyListeners();
     }
-
-    _isInteractionDone = prefs.getBool('isInteractionDone') ?? false; // Lade den Interaktionsstatus
-  }
-
-  void _updateInteractionStatus(bool isDone) {
-    _isInteractionDone = isDone;
-    notifyListeners();
   }
 }

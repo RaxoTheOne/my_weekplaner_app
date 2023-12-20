@@ -4,7 +4,7 @@ import 'package:my_weekplaner_app/apointment_model.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
-  HomePage({Key? key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ class HomePage extends StatelessWidget {
                           leading: Icon(Icons.event),
                           title: Text(appointment.description),
                           subtitle: Text(
-                            '${DateFormat('yMMMd').format(appointment.date)} ${appointment.time.format(context)}',
+                            '${DateFormat('yMMMd').format(appointment.date)}',
                           ),
                           trailing: IconButton(
                             icon: Icon(Icons.delete),
@@ -67,7 +67,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  void _updateInteractionStatus(BuildContext context) async {
+  Future<void> _updateInteractionStatus(BuildContext context) async {
     final appointmentModel = Provider.of<AppointmentModel>(context, listen: false);
     await appointmentModel.saveAppointments(); // Speichern des Interaktionsstatus
   }
