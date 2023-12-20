@@ -135,17 +135,6 @@ class _CalendarPageState extends State<CalendarPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ElevatedButton.icon(
-                onPressed: () => _selectTime(context),
-                icon: Icon(Icons.access_time),
-                label: Text('Uhrzeit auswählen'),
-              ),
-            ],
-          ),
-          SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
               ElevatedButton(
                 onPressed: _addAppointment,
                 child: Text('Termin hinzufügen'),
