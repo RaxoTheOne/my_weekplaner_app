@@ -151,13 +151,14 @@ class _CalendarPageState extends State<CalendarPage> {
                         children: appointmentsOnSelectedDay
                             .map(
                               (appointment) => ListTile(
-                                tileColor: Colors.grey[200],
+                                tileColor: Color.fromARGB(255, 128, 131, 230),
                                 title: Text(appointment.description),
                                 trailing: IconButton(
                                   icon: Icon(Icons.delete),
                                   onPressed: () =>
                                       _removeAppointment(appointment),
                                 ),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
                               ),
                             )
                             .toList(),
