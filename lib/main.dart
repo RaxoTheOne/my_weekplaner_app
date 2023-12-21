@@ -24,9 +24,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (context) => SettingsModel()),
         ChangeNotifierProvider(create: (context) => AppointmentModel()),
       ],
-      child: MaterialApp(
-        home: const MeineApp(),
-      ),
+      child: const MeineApp(),
     ),
   );
 }

@@ -3,56 +3,103 @@ import 'package:intl/intl.dart';
 import 'package:my_weekplaner_app/apointment_model.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  DateTime _selectedDate = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAppointments();
+  }
+
+  void _loadAppointments() async {
+    final appointmentModel =
+        Provider.of<AppointmentModel>(context, listen: false);
+    await appointmentModel.loadAppointments();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<AppointmentModel>(
       builder: (context, appointmentModel, child) {
-        List<Appointment> upcomingAppointments = appointmentModel.appointments
+        List<Appointment> bevorstehendeTermine = appointmentModel.appointments
             .where(
               (appointment) =>
-                  appointment.date.isAfter(DateTime.now()) &&
-                  appointment.date.isBefore(DateTime.now().add(Duration(days: 7))),
+                  appointment.date.month == _selectedDate.month &&
+                  appointment.date.year == _selectedDate.year,
             )
             .toList();
 
         // Sortiere die Termine nach Datum
-        upcomingAppointments.sort((a, b) => a.date.compareTo(b.date));
+        bevorstehendeTermine.sort((a, b) => a.date.compareTo(b.date));
+
+        final brightness = Theme.of(context).brightness;
 
         return Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.grey,
             title: Text('Meine Termine'),
+            actions: [
+              IconButton(
+                icon: Icon(Icons.date_range),
+                onPressed: () => _selectDate(context),
+              ),
+            ],
           ),
           body: Column(
             children: [
-              if (upcomingAppointments.isEmpty)
+              if (bevorstehendeTermine.isEmpty)
                 Expanded(
                   child: Center(
                     child: Text(
                       'Keine bevorstehenden Termine',
-                      style: TextStyle(fontSize: 17),
+                      style: TextStyle(
+                        fontSize: 17,
+                        color: brightness == Brightness.light
+                            ? Colors.black // Hellmodus
+                            : Colors.white, // Dunkelmodus
+                      ),
                     ),
                   ),
                 )
               else
                 Expanded(
                   child: ListView(
-                    children: upcomingAppointments.map((appointment) {
+                    children: bevorstehendeTermine.map((appointment) {
                       return Card(
+                        color: brightness == Brightness.light
+                            ? Colors.white // Hellmodus
+                            : Colors.grey[800], // Dunkelmodus
                         child: ListTile(
                           leading: Icon(Icons.event),
-                          title: Text(appointment.description),
+                          title: Text(
+                            appointment.description,
+                            style: TextStyle(
+                              color: brightness == Brightness.light
+                                  ? Colors.black // Hellmodus
+                                  : Colors.white, // Dunkelmodus
+                            ),
+                          ),
                           subtitle: Text(
                             '${DateFormat('yMMMd').format(appointment.date)}',
+                            style: TextStyle(
+                              color: brightness == Brightness.light
+                                  ? Colors.black54 // Hellmodus
+                                  : Colors.white70, // Dunkelmodus
+                            ),
                           ),
                           trailing: IconButton(
                             icon: Icon(Icons.delete),
                             onPressed: () {
                               appointmentModel.removeAppointment(appointment);
-                              _updateInteractionStatus(context);
+                              _updateInteraktionsstatus(context);
                             },
                           ),
                         ),
@@ -67,8 +114,24 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Future<void> _updateInteractionStatus(BuildContext context) async {
-    final appointmentModel = Provider.of<AppointmentModel>(context, listen: false);
-    await appointmentModel.saveAppointments(); // Speichern des Interaktionsstatus
+  Future<void> _updateInteraktionsstatus(BuildContext context) async {
+    final appointmentModel =
+        Provider.of<AppointmentModel>(context, listen: false);
+    await appointmentModel.saveAppointments();
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime(DateTime.now().year - 5),
+      lastDate: DateTime(DateTime.now().year + 5),
+    );
+
+    if (pickedDate != null && pickedDate != _selectedDate) {
+      setState(() {
+        _selectedDate = pickedDate;
+      });
+    }
   }
 }

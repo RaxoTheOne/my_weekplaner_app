@@ -17,6 +17,8 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final settingsModel = Provider.of<SettingsModel>(context);
+    final brightness = Theme.of(context).brightness;
+
     return ListView(
       children: <Widget>[
         SwitchListTile(
@@ -46,7 +48,14 @@ class _SettingsPageState extends State<SettingsPage> {
                 .map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
-                child: Text(value),
+                child: Text(
+                  value,
+                  style: TextStyle(
+                    color: brightness == Brightness.light
+                        ? Colors.black // Hellmodus
+                        : Colors.white, // Dunkelmodus
+                  ),
+                ),
               );
             }).toList(),
           ),
@@ -64,7 +73,14 @@ class _SettingsPageState extends State<SettingsPage> {
                 .map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
-                child: Text(value),
+                child: Text(
+                  value,
+                  style: TextStyle(
+                    color: brightness == Brightness.light
+                        ? Colors.black // Hellmodus
+                        : Colors.white, // Dunkelmodus
+                  ),
+                ),
               );
             }).toList(),
           ),
@@ -82,7 +98,14 @@ class _SettingsPageState extends State<SettingsPage> {
                 .map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
-                child: Text(value),
+                child: Text(
+                  value,
+                  style: TextStyle(
+                    color: brightness == Brightness.light
+                        ? Colors.black // Hellmodus
+                        : Colors.white, // Dunkelmodus
+                  ),
+                ),
               );
             }).toList(),
           ),
@@ -96,11 +119,25 @@ class _SettingsPageState extends State<SettingsPage> {
                 _selectedFirstDay = newValue!;
               });
             },
-            items: <String>['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag']
-                .map<DropdownMenuItem<String>>((String value) {
+            items: <String>[
+              'Montag',
+              'Dienstag',
+              'Mittwoch',
+              'Donnerstag',
+              'Freitag',
+              'Samstag',
+              'Sonntag'
+            ].map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
-                child: Text(value),
+                child: Text(
+                  value,
+                  style: TextStyle(
+                    color: brightness == Brightness.light
+                        ? Colors.black // Hellmodus
+                        : Colors.white, // Dunkelmodus
+                  ),
+                ),
               );
             }).toList(),
           ),
@@ -117,7 +154,7 @@ class _SettingsPageState extends State<SettingsPage> {
 class SettingsModel extends ChangeNotifier {
   bool _notificationsOn = false;
   bool _darkModeOn = false;
-  
+
   bool get notificationsOn => _notificationsOn;
   bool get darkModeOn => _darkModeOn;
 
