@@ -46,12 +46,6 @@ class _HomePageState extends State<HomePage> {
           appBar: AppBar(
             backgroundColor: Colors.grey,
             title: Text('Meine Termine'),
-            actions: [
-              IconButton(
-                icon: Icon(Icons.date_range),
-                onPressed: () => _selectDate(context),
-              ),
-            ],
           ),
           body: Column(
             children: [
@@ -120,18 +114,4 @@ class _HomePageState extends State<HomePage> {
     await appointmentModel.saveAppointments();
   }
 
-  Future<void> _selectDate(BuildContext context) async {
-    DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: _selectedDate,
-      firstDate: DateTime(DateTime.now().year - 5),
-      lastDate: DateTime(DateTime.now().year + 5),
-    );
-
-    if (pickedDate != null && pickedDate != _selectedDate) {
-      setState(() {
-        _selectedDate = pickedDate;
-      });
-    }
-  }
 }
