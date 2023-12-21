@@ -56,7 +56,6 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   void _addAppointment() {
-    // Hier wird nur die Beschreibung ohne Uhrzeit hinzugefügt
     final description = _descriptionController.text.trim();
     if (_selectedDay != null && description.isNotEmpty) {
       final appointmentModel =
@@ -65,11 +64,11 @@ class _CalendarPageState extends State<CalendarPage> {
         date: _selectedDay!,
         description: description,
       ));
+      _saveAppointments(); // Versetzen des Speichern-Aufrufs, um sicherzustellen, dass die Daten synchronisiert werden
       setState(() {
         _descriptionController.text = '';
         _selectedDay = null;
-      });
-      _saveAppointments();
+      });      
     }
   }
 
