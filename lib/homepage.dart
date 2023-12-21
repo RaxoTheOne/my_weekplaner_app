@@ -113,5 +113,4 @@ class _HomePageState extends State<HomePage> {
         Provider.of<AppointmentModel>(context, listen: false);
     await appointmentModel.saveAppointments();
   }
-
 }
