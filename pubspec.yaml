@@ -23,6 +23,12 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^3.0.1
 
+flutter_native_splash:
+  color: "#FFFFFF"  # Hintergrundfarbe des Splashscreens
+  image: "assets/_cf771525-d194-4742-9e45-a413a6604178.jpeg"  # Pfad zum Bild
+  image_dark: "assets/_cf771525-d194-4742-9e45-a413a6604178.jpeg"  # Pfad zum Bild im Dark Mode
+  fit: BoxFit.cover
+
 flutter_icons:
   android: true
   ios: true
