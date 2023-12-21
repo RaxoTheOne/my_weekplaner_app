@@ -34,8 +34,8 @@ class _SplashScreenState extends State<SplashScreen> {
             width: double.infinity,
             height: double.infinity,
             child: FlareActor(
-              'assets/your_animation.flr',  // Pfad zu deiner Flare-Animation
-              animation: 'play',  // Name deiner Animation
+              'assets/your_animation.flr', // Pfad zu deiner Flare-Animation
+              animation: 'play', // Name deiner Animation
               fit: BoxFit.cover,
             ),
           ),
