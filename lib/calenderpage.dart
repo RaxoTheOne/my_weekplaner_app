@@ -29,32 +29,6 @@ class _CalendarPageState extends State<CalendarPage> {
     await appointmentModel.loadAppointments();
   }
 
-  void _selectTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-
-    if (picked != null) {
-      // Hier wird nur die Beschreibung ohne Uhrzeit hinzugefügt
-      final description = _descriptionController.text.trim();
-      if (description.isNotEmpty) {
-        final appointmentModel =
-            Provider.of<AppointmentModel>(context, listen: false);
-        appointmentModel.addAppointment(Appointment(
-          date: _selectedDay!,
-          description: description,
-        ));
-        _saveAppointments();
-      }
-
-      setState(() {
-        _descriptionController.text = '';
-        _selectedDay = null;
-      });
-    }
-  }
-
   void _addAppointment() {
     final description = _descriptionController.text.trim();
     if (_selectedDay != null && description.isNotEmpty) {
@@ -64,11 +38,11 @@ class _CalendarPageState extends State<CalendarPage> {
         date: _selectedDay!,
         description: description,
       ));
-      _saveAppointments(); // Versetzen des Speichern-Aufrufs, um sicherzustellen, dass die Daten synchronisiert werden
+      _saveAppointments();
       setState(() {
         _descriptionController.text = '';
         _selectedDay = null;
-      });      
+      });
     }
   }
 

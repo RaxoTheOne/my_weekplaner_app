@@ -10,15 +10,16 @@ class Appointment {
     required this.date,
     required this.description,
   });
+
   @override
   String toString() {
     return '$date, $description';
   }
 
   static Appointment fromString(String appointmentString) {
-    final parts = appointmentString.split(' ');
+    final parts = appointmentString.split(', ');
     final date = DateTime.parse(parts[0]);
-    final description = parts.sublist(2).join(' ');
+    final description = parts[1];
 
     return Appointment(
       date: date,
