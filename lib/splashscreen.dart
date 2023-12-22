@@ -36,8 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
             height: MediaQuery.of(context).size.height,
           ),
           // Animierter orangener Container
-          Align(
-            alignment: Alignment.center,
+        Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -50,7 +49,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 // ProgressIndicator
                 LinearProgressIndicator(
                   backgroundColor: Colors.transparent,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
                 ),
               ],
             ),

@@ -29,11 +29,11 @@ class _MeinHomebildschirmState extends State<MeinHomebildschirm> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Weekplaner-App'),
-        backgroundColor: Colors.orange,
+        backgroundColor: Color.fromARGB(255, 128, 131, 230),
       ),
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.grey,
+        backgroundColor: Color.fromARGB(255, 242, 242, 242), // Hintergrundfarbe der Bottom Navigation Bar
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -49,7 +49,8 @@ class _MeinHomebildschirmState extends State<MeinHomebildschirm> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
+        selectedItemColor: Color.fromARGB(255, 128, 131, 230), // Farbe für ausgewählte Elemente
+        unselectedItemColor: Colors.grey, // Farbe für nicht ausgewählte Elemente
         onTap: _onItemTapped,
       ),
     );
