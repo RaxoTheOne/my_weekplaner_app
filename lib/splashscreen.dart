@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:my_weekplaner_app/app.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -30,14 +29,11 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Stack(
         children: [
           // Hintergrund des Splashscreens
-          Container(
-            width: double.infinity,
-            height: double.infinity,
-            child: FlareActor(
-              'assets/your_animation.flr', // Pfad zu deiner Flare-Animation
-              animation: 'play', // Name deiner Animation
-              fit: BoxFit.cover,
-            ),
+          Image.asset(
+            'assets/_cf771525-d194-4742-9e45-a413a6604178.jpeg',
+            fit: BoxFit.cover,
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
           ),
           // Animierter orangener Container
           Align(
@@ -45,7 +41,11 @@ class _SplashScreenState extends State<SplashScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Hier kannst du weitere Widgets für dein Bild hinzufügen
+                Container(
+                  width: 200,
+                  height: 300,
+                  // Hier kannst du weitere Widgets für dein Bild hinzufügen
+                ),
                 SizedBox(height: 20),
                 // ProgressIndicator
                 CircularProgressIndicator(
