@@ -33,7 +33,7 @@ class _MeinHomebildschirmState extends State<MeinHomebildschirm> {
       ),
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color.fromARGB(255, 242, 242, 242), // Hintergrundfarbe der Bottom Navigation Bar
+        backgroundColor: Color.fromARGB(255, 91, 88, 88), // Hintergrundfarbe der Bottom Navigation Bar
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
