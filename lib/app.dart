@@ -33,7 +33,8 @@ class _MeinHomebildschirmState extends State<MeinHomebildschirm> {
       ),
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color.fromARGB(255, 91, 88, 88), // Hintergrundfarbe der Bottom Navigation Bar
+        backgroundColor: Color.fromARGB(
+            255, 91, 88, 88), // Hintergrundfarbe der Bottom Navigation Bar
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -49,8 +50,10 @@ class _MeinHomebildschirmState extends State<MeinHomebildschirm> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Color.fromARGB(255, 128, 131, 230), // Farbe für ausgewählte Elemente
-        unselectedItemColor: Colors.grey, // Farbe für nicht ausgewählte Elemente
+        selectedItemColor: Color.fromARGB(
+            255, 128, 131, 230), // Farbe für ausgewählte Elemente
+        unselectedItemColor:
+            Colors.grey, // Farbe für nicht ausgewählte Elemente
         onTap: _onItemTapped,
       ),
     );
