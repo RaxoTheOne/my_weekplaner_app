@@ -160,7 +160,8 @@ class SettingsModel extends ChangeNotifier {
     _darkModeOn = value;
     _selectedThemeModeOption = value
         ? ThemeModeOption.Dark
-        : ThemeModeOption.Light; // Aktualisiere die ausgewählte Dunkelmodus-Option
+        : ThemeModeOption
+            .Light; // Aktualisiere die ausgewählte Dunkelmodus-Option
     notifyListeners();
   }
 }
