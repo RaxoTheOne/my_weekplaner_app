@@ -36,11 +36,17 @@ class MeineApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<SettingsModel>(
       builder: (context, settingsModel, child) {
+        // Aktuellen Brightness-Modus abrufen (Dark oder Light)
+        final brightness = MediaQuery.of(context).platformBrightness;
+
         return MaterialApp(
           title: 'Meine Wochenplaner-App',
           theme: ThemeData(
-            brightness:
-                settingsModel.darkModeOn ? Brightness.dark : Brightness.light,
+            brightness: brightness == Brightness.dark
+                ? Brightness.dark
+                : settingsModel.darkModeOn
+                    ? Brightness.dark
+                    : Brightness.light,
           ),
           home: SplashScreen(),
         );
