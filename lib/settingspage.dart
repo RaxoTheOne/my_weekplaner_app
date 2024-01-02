@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+enum ThemeModeOption {
+  Dark,
+  Light,
+  System,
+}
+
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
 
@@ -11,6 +17,7 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   String _selectedLanguage = 'Deutsch';
   String _selectedDateFormat = 'DD/MM/YYYY';
+  ThemeModeOption _selectedThemeModeOption = ThemeModeOption.System;
 
   @override
   Widget build(BuildContext context) {
@@ -26,12 +33,32 @@ class _SettingsPageState extends State<SettingsPage> {
             settingsModel.setNotificationsOn(value);
           },
         ),
-        SwitchListTile(
+        ListTile(
           title: const Text('Dunkelmodus'),
-          value: brightness == Brightness.dark,
-          onChanged: (bool value) {
-            settingsModel.setDarkModeOn(value);
-          },
+          trailing: DropdownButton<ThemeModeOption>(
+            value: _selectedThemeModeOption,
+            onChanged: (ThemeModeOption? newValue) {
+              setState(() {
+                _selectedThemeModeOption = newValue!;
+                _updateThemeMode(settingsModel);
+              });
+            },
+            items: ThemeModeOption.values
+                .map<DropdownMenuItem<ThemeModeOption>>(
+                    (ThemeModeOption value) {
+              return DropdownMenuItem<ThemeModeOption>(
+                value: value,
+                child: Text(
+                  _themeModeOptionToString(value),
+                  style: TextStyle(
+                    color: brightness == Brightness.light
+                        ? Colors.black // Hellmodus
+                        : Colors.white, // Dunkelmodus
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
         ),
         ListTile(
           title: const Text('Sprache'),
@@ -85,6 +112,33 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
       ],
     );
+  }
+
+  String _themeModeOptionToString(ThemeModeOption themeModeOption) {
+    switch (themeModeOption) {
+      case ThemeModeOption.Dark:
+        return 'Dark';
+      case ThemeModeOption.Light:
+        return 'Light';
+      case ThemeModeOption.System:
+        return 'System';
+    }
+  }
+
+  void _updateThemeMode(SettingsModel settingsModel) {
+    switch (_selectedThemeModeOption) {
+      case ThemeModeOption.Dark:
+        settingsModel.setDarkModeOn(true);
+        break;
+      case ThemeModeOption.Light:
+        settingsModel.setDarkModeOn(false);
+        break;
+      case ThemeModeOption.System:
+        // Implementiere hier die Logik, um den Dunkelmodus an das System zu binden
+        // Du kannst hier den vorigen Code verwenden, um den Dunkelmodus an das System anzupassen
+        // Achte darauf, die Helligkeitsänderungen auch im `initState` oder `didChangePlatformBrightness` zu überwachen.
+        break;
+    }
   }
 }
 
