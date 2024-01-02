@@ -36,21 +36,31 @@ class MeineApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<SettingsModel>(
       builder: (context, settingsModel, child) {
-        // Aktuellen Brightness-Modus abrufen (Dark oder Light)
-        final brightness = MediaQuery.of(context).platformBrightness;
-
         return MaterialApp(
           title: 'Meine Wochenplaner-App',
-          theme: ThemeData(
-            brightness: brightness == Brightness.dark
-                ? Brightness.dark
-                : settingsModel.darkModeOn
-                    ? Brightness.dark
-                    : Brightness.light,
-          ),
+          theme: _buildThemeData(context, settingsModel),
           home: SplashScreen(),
         );
       },
     );
+  }
+
+  ThemeData _buildThemeData(BuildContext context, SettingsModel settingsModel) {
+    // Aktuellen Brightness-Modus abrufen (Dark oder Light)
+    final brightness = MediaQuery.of(context).platformBrightness;
+
+    // Überprüfen, ob der Dunkelmodus basierend auf den Systemeinstellungen aktiviert werden soll
+    if (settingsModel.selectedThemeModeOption == ThemeModeOption.System) {
+      return ThemeData(
+        brightness: brightness,
+      );
+    } else {
+      // Andernfalls, basierend auf den Einstellungen des Benutzers
+      return ThemeData(
+        brightness: settingsModel.selectedThemeModeOption == ThemeModeOption.Dark
+            ? Brightness.dark
+            : Brightness.light,
+      );
+    }
   }
 }

@@ -145,9 +145,11 @@ class _SettingsPageState extends State<SettingsPage> {
 class SettingsModel extends ChangeNotifier {
   bool _notificationsOn = false;
   bool _darkModeOn = false;
+  ThemeModeOption _selectedThemeModeOption = ThemeModeOption.System;
 
   bool get notificationsOn => _notificationsOn;
   bool get darkModeOn => _darkModeOn;
+  ThemeModeOption get selectedThemeModeOption => _selectedThemeModeOption;
 
   void setNotificationsOn(bool value) {
     _notificationsOn = value;
@@ -156,6 +158,9 @@ class SettingsModel extends ChangeNotifier {
 
   void setDarkModeOn(bool value) {
     _darkModeOn = value;
+    _selectedThemeModeOption = value
+        ? ThemeModeOption.Dark
+        : ThemeModeOption.Light; // Aktualisiere die ausgewählte Dunkelmodus-Option
     notifyListeners();
   }
 }
