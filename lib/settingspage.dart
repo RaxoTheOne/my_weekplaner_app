@@ -11,8 +11,6 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   String _selectedLanguage = 'Deutsch';
   String _selectedDateFormat = 'DD/MM/YYYY';
-  String _selectedTimeFormat = '24-Stunden';
-  String _selectedFirstDay = 'Montag';
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +28,7 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         SwitchListTile(
           title: const Text('Dunkelmodus'),
-          value: settingsModel.darkModeOn,
+          value: brightness == Brightness.dark,
           onChanged: (bool value) {
             settingsModel.setDarkModeOn(value);
           },
@@ -84,67 +82,6 @@ class _SettingsPageState extends State<SettingsPage> {
               );
             }).toList(),
           ),
-        ),
-        ListTile(
-          title: const Text('Zeitformat'),
-          trailing: DropdownButton<String>(
-            value: _selectedTimeFormat,
-            onChanged: (String? newValue) {
-              setState(() {
-                _selectedTimeFormat = newValue!;
-              });
-            },
-            items: <String>['12-Stunden', '24-Stunden']
-                .map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(
-                  value,
-                  style: TextStyle(
-                    color: brightness == Brightness.light
-                        ? Colors.black // Hellmodus
-                        : Colors.white, // Dunkelmodus
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-        ListTile(
-          title: const Text('Erster Tag der Woche'),
-          trailing: DropdownButton<String>(
-            value: _selectedFirstDay,
-            onChanged: (String? newValue) {
-              setState(() {
-                _selectedFirstDay = newValue!;
-              });
-            },
-            items: <String>[
-              'Montag',
-              'Dienstag',
-              'Mittwoch',
-              'Donnerstag',
-              'Freitag',
-              'Samstag',
-              'Sonntag'
-            ].map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(
-                  value,
-                  style: TextStyle(
-                    color: brightness == Brightness.light
-                        ? Colors.black // Hellmodus
-                        : Colors.white, // Dunkelmodus
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-        ListTile(
-          title: const Text('Erinnerungseinstellungen'),
-          // Hier können weitere UI-Komponenten für Erinnerungseinstellungen hinzugefügt werden
         ),
       ],
     );
