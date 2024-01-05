@@ -68,104 +68,106 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(13.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TableCalendar(
-            firstDay: DateTime.utc(2010, 10, 16),
-            lastDay: DateTime.utc(2030, 3, 14),
-            focusedDay: _focusedDay,
-            calendarFormat: _calendarFormat,
-            selectedDayPredicate: (day) {
-              return isSameDay(_selectedDay, day);
-            },
-            onDaySelected: (selectedDay, focusedDay) {
-              setState(() {
-                _selectedDay = selectedDay;
+    return SingleChildScrollView( // Wrap with SingleChildScrollView
+      child: Padding(
+        padding: const EdgeInsets.all(13.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TableCalendar(
+              firstDay: DateTime.utc(2010, 10, 16),
+              lastDay: DateTime.utc(2030, 3, 14),
+              focusedDay: _focusedDay,
+              calendarFormat: _calendarFormat,
+              selectedDayPredicate: (day) {
+                return isSameDay(_selectedDay, day);
+              },
+              onDaySelected: (selectedDay, focusedDay) {
+                setState(() {
+                  _selectedDay = selectedDay;
+                  _focusedDay = focusedDay;
+                });
+              },
+              onFormatChanged: (format) {
+                setState(() {
+                  _calendarFormat = format;
+                });
+              },
+              onPageChanged: (focusedDay) {
                 _focusedDay = focusedDay;
-              });
-            },
-            onFormatChanged: (format) {
-              setState(() {
-                _calendarFormat = format;
-              });
-            },
-            onPageChanged: (focusedDay) {
-              _focusedDay = focusedDay;
-            },
-          ),
-          SizedBox(height: 10),
-          TextField(
-            controller: _descriptionController,
-            decoration: InputDecoration(
-              labelText: 'Terminbeschreibung',
-              border: OutlineInputBorder(),
-            ),
-          ),
-          SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: _addAppointment,
-                child: Text('Termin hinzufügen'),
-              ),
-              SizedBox(width: 10),
-              ElevatedButton(
-                onPressed: () {
-                  if (_selectedDay != null) {
-                    _removeAppointmentsOnDate(_selectedDay!);
-                    setState(() {
-                      _selectedDay = null;
-                    });
-                  }
-                },
-                child: Text('Termine entfernen'),
-              ),
-            ],
-          ),
-          SizedBox(height: 10),
-          if (_selectedDay != null)
-            Text(
-              'Termine am ${DateFormat('MMMM d, y').format(_selectedDay!)}:',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          if (_selectedDay != null)
-            Consumer<AppointmentModel>(
-              builder: (context, appointmentModel, child) {
-                final appointmentsOnSelectedDay = appointmentModel.appointments
-                    .where((appointment) =>
-                        isSameDay(appointment.date, _selectedDay))
-                    .toList();
-
-                return appointmentsOnSelectedDay.isEmpty
-                    ? Center(
-                        child: Text(
-                          'Keine Termine an diesem Tag',
-                          style: TextStyle(fontSize: 17),
-                        ),
-                      )
-                    : Column(
-                        children: appointmentsOnSelectedDay
-                            .map(
-                              (appointment) => ListTile(
-                                tileColor: Color.fromARGB(255, 128, 131, 230),
-                                title: Text(appointment.description),
-                                trailing: IconButton(
-                                  icon: Icon(Icons.delete),
-                                  onPressed: () =>
-                                      _removeAppointment(appointment),
-                                ),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-                              ),
-                            )
-                            .toList(),
-                      );
               },
             ),
-        ],
+            SizedBox(height: 10),
+            TextField(
+              controller: _descriptionController,
+              decoration: InputDecoration(
+                labelText: 'Terminbeschreibung',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: _addAppointment,
+                  child: Text('Termin hinzufügen'),
+                ),
+                SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_selectedDay != null) {
+                      _removeAppointmentsOnDate(_selectedDay!);
+                      setState(() {
+                        _selectedDay = null;
+                      });
+                    }
+                  },
+                  child: Text('Termine entfernen'),
+                ),
+              ],
+            ),
+            SizedBox(height: 10),
+            if (_selectedDay != null)
+              Text(
+                'Termine am ${DateFormat('MMMM d, y').format(_selectedDay!)}:',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            if (_selectedDay != null)
+              Consumer<AppointmentModel>(
+                builder: (context, appointmentModel, child) {
+                  final appointmentsOnSelectedDay = appointmentModel.appointments
+                      .where((appointment) =>
+                          isSameDay(appointment.date, _selectedDay))
+                      .toList();
+
+                  return appointmentsOnSelectedDay.isEmpty
+                      ? Center(
+                          child: Text(
+                            'Keine Termine an diesem Tag',
+                            style: TextStyle(fontSize: 17),
+                          ),
+                        )
+                      : Column(
+                          children: appointmentsOnSelectedDay
+                              .map(
+                                (appointment) => ListTile(
+                                  tileColor: Color.fromARGB(255, 128, 131, 230),
+                                  title: Text(appointment.description),
+                                  trailing: IconButton(
+                                    icon: Icon(Icons.delete),
+                                    onPressed: () =>
+                                        _removeAppointment(appointment),
+                                  ),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                                ),
+                              )
+                              .toList(),
+                        );
+                },
+              ),
+          ],
+        ),
       ),
     );
   }
