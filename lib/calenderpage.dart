@@ -152,7 +152,7 @@ class _CalendarPageState extends State<CalendarPage> {
                           children: appointmentsOnSelectedDay
                               .map(
                                 (appointment) => ListTile(
-                                  tileColor: Color.fromARGB(255, 128, 131, 230),
+                                  tileColor: Color.fromARGB(255, 220, 210, 204),
                                   title: Text(appointment.description),
                                   trailing: IconButton(
                                     icon: Icon(Icons.delete),

@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> {
         return Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.grey,
-            title: Text('Meine Termine'),
+            title: Text('Overview'),
           ),
           body: Column(
             children: [

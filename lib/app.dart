@@ -28,8 +28,8 @@ class _MeinHomebildschirmState extends State<MeinHomebildschirm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Weekplaner-App'),
-        backgroundColor: Color.fromARGB(255, 128, 131, 230),
+        title: const Text('Weekly-O'),
+        backgroundColor: Color.fromARGB(204, 175, 165, 165),
       ),
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
@@ -51,7 +51,7 @@ class _MeinHomebildschirmState extends State<MeinHomebildschirm> {
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Color.fromARGB(
-            255, 128, 131, 230), // Farbe für ausgewählte Elemente
+            255, 255, 255, 255), // Farbe für ausgewählte Elemente
         unselectedItemColor:
             Colors.grey, // Farbe für nicht ausgewählte Elemente
         onTap: _onItemTapped,
