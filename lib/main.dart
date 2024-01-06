@@ -57,9 +57,10 @@ class MeineApp extends StatelessWidget {
     } else {
       // Andernfalls, basierend auf den Einstellungen des Benutzers
       return ThemeData(
-        brightness: settingsModel.selectedThemeModeOption == ThemeModeOption.Dark
-            ? Brightness.dark
-            : Brightness.light,
+        brightness:
+            settingsModel.selectedThemeModeOption == ThemeModeOption.Dark
+                ? Brightness.dark
+                : Brightness.light,
       );
     }
   }
