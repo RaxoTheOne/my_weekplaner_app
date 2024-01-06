@@ -12,7 +12,7 @@
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
             <meta-data
-                android_name="io.flutter.embedding.android.SplashScreenDrawable"
+                android:name="io.flutter.embedding.android.SplashScreenDrawable"
                 android:resource="@drawable/launch_background"
                 />
             <!-- Specifies an Android theme to apply to this Activity as soon as
