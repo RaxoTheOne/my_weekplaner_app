@@ -68,7 +68,8 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView( // Wrap with SingleChildScrollView
+    return SingleChildScrollView(
+      // Wrap with SingleChildScrollView
       child: Padding(
         padding: const EdgeInsets.all(13.0),
         child: Column(
@@ -136,7 +137,8 @@ class _CalendarPageState extends State<CalendarPage> {
             if (_selectedDay != null)
               Consumer<AppointmentModel>(
                 builder: (context, appointmentModel, child) {
-                  final appointmentsOnSelectedDay = appointmentModel.appointments
+                  final appointmentsOnSelectedDay = appointmentModel
+                      .appointments
                       .where((appointment) =>
                           isSameDay(appointment.date, _selectedDay))
                       .toList();
@@ -159,7 +161,8 @@ class _CalendarPageState extends State<CalendarPage> {
                                     onPressed: () =>
                                         _removeAppointment(appointment),
                                   ),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(50)),
                                 ),
                               )
                               .toList(),
