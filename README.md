@@ -1,3 +1,5 @@
 # my_weekplaner_app
-
-A new Flutter project.
+# Weekly-O
+A simple Weekplaner for a simple oragnized week.
+A new Flutter project. 
+My first own Project.
