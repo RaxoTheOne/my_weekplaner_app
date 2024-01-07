@@ -158,14 +158,24 @@ class _CalendarPageState extends State<CalendarPage> {
                                   title: Text(
                                     appointment.description,
                                     style: TextStyle(
-                                      color: Theme.of(context).brightness == Brightness.dark
-                                          ? const Color.fromARGB(255, 107, 107, 107) // Ändere diese Farbe nach Bedarf
-                                          : Colors.black, // Oder eine andere Farbe für den Light Mode
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? const Color.fromARGB(255, 107, 107,
+                                              107) // Ändere diese Farbe nach Bedarf
+                                          : Colors
+                                              .black, // Oder eine andere Farbe für den Light Mode
                                     ),
                                   ),
                                   trailing: IconButton(
-                                    icon: Icon(Icons.delete),
-                                    onPressed: () => _removeAppointment(appointment),
+                                    icon: Icon(Icons.delete,
+                                        color: Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? const Color.fromARGB(255, 107,
+                                                107, 107) // Dark Mode Farbe hier änderbar nach Bedarf
+                                            : Colors.black // LightMode Farbe hier änderbar nach Bedarf
+                                        ),
+                                    onPressed: () =>
+                                        _removeAppointment(appointment),
                                   ),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(50),
