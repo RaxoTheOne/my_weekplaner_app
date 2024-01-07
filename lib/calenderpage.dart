@@ -155,14 +155,21 @@ class _CalendarPageState extends State<CalendarPage> {
                               .map(
                                 (appointment) => ListTile(
                                   tileColor: Color.fromARGB(255, 220, 210, 204),
-                                  title: Text(appointment.description),
+                                  title: Text(
+                                    appointment.description,
+                                    style: TextStyle(
+                                      color: Theme.of(context).brightness == Brightness.dark
+                                          ? const Color.fromARGB(255, 107, 107, 107) // Ändere diese Farbe nach Bedarf
+                                          : Colors.black, // Oder eine andere Farbe für den Light Mode
+                                    ),
+                                  ),
                                   trailing: IconButton(
                                     icon: Icon(Icons.delete),
-                                    onPressed: () =>
-                                        _removeAppointment(appointment),
+                                    onPressed: () => _removeAppointment(appointment),
                                   ),
                                   shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(50)),
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
                                 ),
                               )
                               .toList(),
