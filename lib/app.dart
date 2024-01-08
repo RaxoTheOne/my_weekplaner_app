@@ -29,12 +29,11 @@ class _MeinHomebildschirmState extends State<MeinHomebildschirm> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Weekly-O'),
-        backgroundColor: Color.fromARGB(204, 175, 165, 165),
+        backgroundColor:  const Color.fromARGB(204, 175, 165, 165),
       ),
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color.fromARGB(
-            255, 91, 88, 88), // Hintergrundfarbe der Bottom Navigation Bar
+        backgroundColor: const Color.fromARGB(255, 91, 88, 88), // Hintergrundfarbe der Bottom Navigation Bar
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -50,10 +49,8 @@ class _MeinHomebildschirmState extends State<MeinHomebildschirm> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Color.fromARGB(
-            255, 255, 255, 255), // Farbe für ausgewählte Elemente
-        unselectedItemColor:
-            Colors.grey, // Farbe für nicht ausgewählte Elemente
+        selectedItemColor: const Color.fromARGB(255, 255, 255, 255), // Farbe für ausgewählte Elemente
+        unselectedItemColor:Colors.grey, // Farbe für nicht ausgewählte Elemente
         onTap: _onItemTapped,
       ),
     );
