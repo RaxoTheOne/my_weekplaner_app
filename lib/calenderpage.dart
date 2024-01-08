@@ -160,19 +160,16 @@ class _CalendarPageState extends State<CalendarPage> {
                                     style: TextStyle(
                                       color: Theme.of(context).brightness ==
                                               Brightness.dark
-                                          ? const Color.fromARGB(255, 107, 107,
-                                              107) // Ändere diese Farbe nach Bedarf
-                                          : Colors
-                                              .black, // Oder eine andere Farbe für den Light Mode
+                                          ? const Color.fromARGB(255, 107, 107,107) // Ändere diese Farbe nach Bedarf
+                                          : const Color.fromRGBO(0, 0, 0, 1), // Oder eine andere Farbe für den Light Mode
                                     ),
                                   ),
                                   trailing: IconButton(
                                     icon: Icon(Icons.delete,
                                         color: Theme.of(context).brightness ==
                                                 Brightness.dark
-                                            ? const Color.fromARGB(255, 107,
-                                                107, 107) // Dark Mode Farbe hier änderbar nach Bedarf
-                                            : Colors.black // LightMode Farbe hier änderbar nach Bedarf
+                                            ? const Color.fromARGB(255,107,107,107) // Dark Mode Farbe hier änderbar nach Bedarf
+                                            : const Color.fromARGB(0, 0, 0, 1), // LightMode Farbe hier änderbar nach Bedarf
                                         ),
                                     onPressed: () =>
                                         _removeAppointment(appointment),
