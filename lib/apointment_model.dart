@@ -4,25 +4,32 @@ import 'package:table_calendar/table_calendar.dart';
 
 class Appointment {
   DateTime date;
+  TimeOfDay time;
   String description;
 
   Appointment({
     required this.date,
+    required this.time,
     required this.description,
   });
 
   @override
   String toString() {
-    return '$date, $description';
+    return '$date, $time, $description';
   }
 
   static Appointment fromString(String appointmentString) {
     final parts = appointmentString.split(', ');
     final date = DateTime.parse(parts[0]);
-    final description = parts[1];
+    final time = TimeOfDay(
+      hour: int.parse(parts[1].split(':')[0]),
+      minute: int.parse(parts[1].split(':')[1]),
+    );
+    final description = parts[2];
 
     return Appointment(
       date: date,
+      time: time,
       description: description,
     );
   }

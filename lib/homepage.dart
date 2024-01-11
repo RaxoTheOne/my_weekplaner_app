@@ -37,8 +37,15 @@ class _HomePageState extends State<HomePage> {
             )
             .toList();
 
-        // Sortiere die Termine nach Datum
-        bevorstehendeTermine.sort((a, b) => a.date.compareTo(b.date));
+        // Sortiere die Termine nach Datum und Uhrzeit
+        bevorstehendeTermine.sort((a, b) {
+          final dateComparison = a.date.compareTo(b.date);
+          if (dateComparison != 0) {
+            return dateComparison;
+          }
+          return a.time.hour * 60 + a.time.minute -
+              (b.time.hour * 60 + b.time.minute);
+        });
 
         final brightness = Theme.of(context).brightness;
 
@@ -74,7 +81,7 @@ class _HomePageState extends State<HomePage> {
                         child: ListTile(
                           leading: Icon(Icons.event),
                           title: Text(
-                            appointment.description,
+                            '${appointment.description} um ${appointment.time.format(context)}',
                             style: TextStyle(
                               color: brightness == Brightness.light
                                   ? Colors.black // Hellmodus

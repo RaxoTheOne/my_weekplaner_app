@@ -29,13 +29,21 @@ class _CalendarPageState extends State<CalendarPage> {
     await appointmentModel.loadAppointments();
   }
 
-  void _addAppointment() {
-    final description = _descriptionController.text.trim();
-    if (_selectedDay != null && description.isNotEmpty) {
-      final appointmentModel =
-          Provider.of<AppointmentModel>(context, listen: false);
+  void _addAppointment() async {
+  final description = _descriptionController.text.trim();
+  if (_selectedDay != null && description.isNotEmpty) {
+    final appointmentModel =
+        Provider.of<AppointmentModel>(context, listen: false);
+
+    final selectedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+
+    if (selectedTime != null) {
       appointmentModel.addAppointment(Appointment(
         date: _selectedDay!,
+        time: selectedTime,
         description: description,
       ));
       _saveAppointments();
@@ -45,6 +53,7 @@ class _CalendarPageState extends State<CalendarPage> {
       });
     }
   }
+}
 
   void _removeAppointmentsOnDate(DateTime date) {
     final appointmentModel =
@@ -156,7 +165,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                 (appointment) => ListTile(
                                   tileColor: Color.fromARGB(255, 220, 210, 204),
                                   title: Text(
-                                    appointment.description,
+                                    '${appointment.description} um ${appointment.time.format(context)}',
                                     style: TextStyle(
                                       color: Theme.of(context).brightness ==
                                               Brightness.dark
