@@ -30,30 +30,30 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   void _addAppointment() async {
-  final description = _descriptionController.text.trim();
-  if (_selectedDay != null && description.isNotEmpty) {
-    final appointmentModel =
-        Provider.of<AppointmentModel>(context, listen: false);
+    final description = _descriptionController.text.trim();
+    if (_selectedDay != null && description.isNotEmpty) {
+      final appointmentModel =
+          Provider.of<AppointmentModel>(context, listen: false);
 
-    final selectedTime = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
+      final selectedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+      );
 
-    if (selectedTime != null) {
-      appointmentModel.addAppointment(Appointment(
-        date: _selectedDay!,
-        time: selectedTime,
-        description: description,
-      ));
-      _saveAppointments();
-      setState(() {
-        _descriptionController.text = '';
-        _selectedDay = null;
-      });
+      if (selectedTime != null) {
+        appointmentModel.addAppointment(Appointment(
+          date: _selectedDay!,
+          time: selectedTime,
+          description: description,
+        ));
+        _saveAppointments();
+        setState(() {
+          _descriptionController.text = '';
+          _selectedDay = null;
+        });
+      }
     }
   }
-}
 
   void _removeAppointmentsOnDate(DateTime date) {
     final appointmentModel =
@@ -169,17 +169,22 @@ class _CalendarPageState extends State<CalendarPage> {
                                     style: TextStyle(
                                       color: Theme.of(context).brightness ==
                                               Brightness.dark
-                                          ? const Color.fromARGB(255, 107, 107,107) // Ändere diese Farbe nach Bedarf
-                                          : const Color.fromRGBO(0, 0, 0, 1), // Oder eine andere Farbe für den Light Mode
+                                          ? const Color.fromARGB(255, 107, 107,
+                                              107) // Ändere diese Farbe nach Bedarf
+                                          : const Color.fromRGBO(0, 0, 0,
+                                              1), // Oder eine andere Farbe für den Light Mode
                                     ),
                                   ),
                                   trailing: IconButton(
-                                    icon: Icon(Icons.delete,
-                                        color: Theme.of(context).brightness ==
-                                                Brightness.dark
-                                            ? const Color.fromARGB(255,107,107,107) // Dark Mode Farbe hier änderbar nach Bedarf
-                                            : const Color.fromARGB(0, 0, 0, 1), // LightMode Farbe hier änderbar nach Bedarf
-                                        ),
+                                    icon: Icon(
+                                      Icons.delete,
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? const Color.fromARGB(255, 107, 107,
+                                              107) // Dark Mode Farbe hier änderbar nach Bedarf
+                                          : const Color.fromARGB(0, 0, 0,
+                                              1), // LightMode Farbe hier änderbar nach Bedarf
+                                    ),
                                     onPressed: () =>
                                         _removeAppointment(appointment),
                                   ),
