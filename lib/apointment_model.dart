@@ -19,25 +19,35 @@ class Appointment {
   }
 
   static Appointment fromString(String appointmentString) {
-  final parts = appointmentString.split(', ');
-  final date = DateTime.parse(parts[0]);
+    final parts = appointmentString.split(', ');
+    final date = DateTime.parse(parts[0]);
 
-  // Entferne führende Nullen aus Stunden und Minuten
-  final timeString = parts[1].replaceAll(RegExp('^0+'), '');
-  
-  final time = TimeOfDay(
-    hour: int.parse(timeString.split(':')[0]),
-    minute: int.parse(timeString.split(':')[1]),
-  );
-  final description = parts[2];
+    // Extrahiere die Uhrzeitzeichenkette und entferne führende/trailing Leerzeichen
+    final timeString = parts[1]
+        .replaceAll(RegExp(r'^TimeOfDay\('), '')
+        .replaceAll(RegExp(r'\)$'), '')
+        .trim();
 
-  return Appointment(
-    date: date,
-    time: time,
-    description: description,
-  );
-}
+    // Entferne führende Nullen aus Stunden und Minuten
+    final cleanedTimeString = timeString.replaceAll(RegExp('^0+'), '');
 
+    // Überprüfe, ob die Zeitzeichenkette aus Ziffern und einem Doppelpunkt besteht
+    if (!RegExp(r'^\d+:\d+$').hasMatch(cleanedTimeString)) {
+      throw FormatException('Ungültiges Zeitformat: $timeString');
+    }
+
+    final time = TimeOfDay(
+      hour: int.parse(cleanedTimeString.split(':')[0]),
+      minute: int.parse(cleanedTimeString.split(':')[1]),
+    );
+    final description = parts[2];
+
+    return Appointment(
+      date: date,
+      time: time,
+      description: description,
+    );
+  }
 }
 
 class AppointmentModel extends ChangeNotifier {
