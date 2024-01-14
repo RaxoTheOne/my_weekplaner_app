@@ -37,7 +37,7 @@ class MeineApp extends StatelessWidget {
     return Consumer<SettingsModel>(
       builder: (context, settingsModel, child) {
         return MaterialApp(
-          title: 'Meine Wochenplaner-App',
+          title: 'My Weekplaner-App',
           theme: _buildThemeData(context, settingsModel),
           home: SplashScreen(),
         );
