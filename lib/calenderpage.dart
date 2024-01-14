@@ -3,15 +3,15 @@ import 'package:intl/intl.dart';
 import 'package:my_weekplaner_app/apointment_model.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CalendarPage extends StatefulWidget {
-  const CalendarPage({Key? key}) : super(key: key);
-
   @override
   _CalendarPageState createState() => _CalendarPageState();
 }
 
 class _CalendarPageState extends State<CalendarPage> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
@@ -21,6 +21,7 @@ class _CalendarPageState extends State<CalendarPage> {
   void initState() {
     super.initState();
     _loadAppointments();
+    _fetchCategories(); // Neu hinzugefügt: Kategorien beim Initialisieren der Seite abrufen
   }
 
   void _loadAppointments() async {
@@ -73,6 +74,17 @@ class _CalendarPageState extends State<CalendarPage> {
     final appointmentModel =
         Provider.of<AppointmentModel>(context, listen: false);
     await appointmentModel.saveAppointments();
+  }
+
+  Future<void> _fetchCategories() async {
+    List categoriesList = [];
+
+    QuerySnapshot querySnapshot = await _firestore.collection('Termine').get();
+    for (var doc in querySnapshot.docs) {
+      categoriesList.add(doc.data());
+    }
+
+    // Hier können Sie categoriesList verwenden oder entsprechend anpassen
   }
 
   @override
