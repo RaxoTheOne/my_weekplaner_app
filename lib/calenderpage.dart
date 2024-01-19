@@ -137,21 +137,6 @@ class _CalendarPageState extends State<CalendarPage> {
             SizedBox(height: 10),
             Row(
               children: [
-                DropdownButton<String>(
-                  value: selectedCategory,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedCategory = newValue!;
-                    });
-                  },
-                  items: categoriesList.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  hint: Text('Kategorie auswählen'),
-                ),
                 SizedBox(width: 10),
                 ElevatedButton(
                   onPressed: _addAppointment,
