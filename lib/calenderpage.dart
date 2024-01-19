@@ -3,27 +3,24 @@ import 'package:intl/intl.dart';
 import 'package:my_weekplaner_app/apointment_model.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CalendarPage extends StatefulWidget {
+  const CalendarPage({Key? key}) : super(key: key);
+
   @override
   _CalendarPageState createState() => _CalendarPageState();
 }
 
 class _CalendarPageState extends State<CalendarPage> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   TextEditingController _descriptionController = TextEditingController();
-  List<String> categoriesList = [];
-  String selectedCategory = ''; // Aktuell ausgewählte Kategorie hinzugefügt
 
   @override
   void initState() {
     super.initState();
     _loadAppointments();
-    _fetchCategories();
   }
 
   void _loadAppointments() async {
@@ -34,7 +31,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
   void _addAppointment() async {
     final description = _descriptionController.text.trim();
-    if (_selectedDay != null && description.isNotEmpty && selectedCategory.isNotEmpty) {
+    if (_selectedDay != null && description.isNotEmpty) {
       final appointmentModel =
           Provider.of<AppointmentModel>(context, listen: false);
 
@@ -48,13 +45,11 @@ class _CalendarPageState extends State<CalendarPage> {
           date: _selectedDay!,
           time: selectedTime,
           description: description,
-          category: selectedCategory,
         ));
         _saveAppointments();
         setState(() {
           _descriptionController.text = '';
           _selectedDay = null;
-          selectedCategory = '';
         });
       }
     }
@@ -80,24 +75,10 @@ class _CalendarPageState extends State<CalendarPage> {
     await appointmentModel.saveAppointments();
   }
 
-  Future<void> _fetchCategories() async {
-  try {
-    QuerySnapshot querySnapshot = await _firestore.collection('Termine').get();
-
-    setState(() {
-      categoriesList = querySnapshot.docs
-          .map((doc) => doc['category'].toString()) // Konvertierung zu String
-          .toList();
-    });
-  } catch (e) {
-    print("Fehler beim Abrufen der Kategorien: $e");
-  }
-}
-
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      // Wrap with SingleChildScrollView
       child: Padding(
         padding: const EdgeInsets.all(13.0),
         child: Column(
@@ -136,8 +117,8 @@ class _CalendarPageState extends State<CalendarPage> {
             ),
             SizedBox(height: 10),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(width: 10),
                 ElevatedButton(
                   onPressed: _addAppointment,
                   child: Text('Termin hinzufügen'),
@@ -189,8 +170,9 @@ class _CalendarPageState extends State<CalendarPage> {
                                       color: Theme.of(context).brightness ==
                                               Brightness.dark
                                           ? const Color.fromARGB(255, 107, 107,
-                                              107)
-                                          : const Color.fromRGBO(0, 0, 0, 1),
+                                              107) // Ändere diese Farbe nach Bedarf
+                                          : const Color.fromRGBO(0, 0, 0,
+                                              1), // Oder eine andere Farbe für den Light Mode
                                     ),
                                   ),
                                   trailing: IconButton(
@@ -199,8 +181,9 @@ class _CalendarPageState extends State<CalendarPage> {
                                       color: Theme.of(context).brightness ==
                                               Brightness.dark
                                           ? const Color.fromARGB(255, 107, 107,
-                                              107)
-                                          : const Color.fromARGB(0, 0, 0, 1),
+                                              107) // Dark Mode Farbe hier änderbar nach Bedarf
+                                          : const Color.fromARGB(0, 0, 0,
+                                              1), // LightMode Farbe hier änderbar nach Bedarf
                                     ),
                                     onPressed: () =>
                                         _removeAppointment(appointment),

@@ -6,18 +6,16 @@ class Appointment {
   DateTime date;
   TimeOfDay time;
   String description;
-  String category; // Added category field
 
   Appointment({
     required this.date,
     required this.time,
     required this.description,
-    required this.category, // Added category field
   });
 
   @override
   String toString() {
-    return '$date, $time, $description, $category'; // Include category in toString
+    return '$date, $time, $description';
   }
 
   static Appointment fromString(String appointmentString) {
@@ -40,13 +38,11 @@ class Appointment {
       minute: int.parse(cleanedTimeString.split(':')[1]),
     );
     final description = parts[2];
-    final category = parts[3]; // Extract category
 
     return Appointment(
       date: date,
       time: time,
       description: description,
-      category: category, // Assign category
     );
   }
 }
