@@ -133,7 +133,7 @@ class _CalendarPageState extends State<CalendarPage> {
                       });
                     }
                   },
-                  child: Text('Termine entfernen'),
+                  child: Text('Termin entfernen'),
                 ),
               ],
             ),
