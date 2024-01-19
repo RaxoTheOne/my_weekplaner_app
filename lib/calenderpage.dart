@@ -16,12 +16,14 @@ class _CalendarPageState extends State<CalendarPage> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   TextEditingController _descriptionController = TextEditingController();
+  List<String> categoriesList = [];
+  String selectedCategory = ''; // Aktuell ausgewählte Kategorie hinzugefügt
 
   @override
   void initState() {
     super.initState();
     _loadAppointments();
-    _fetchCategories(); // Neu hinzugefügt: Kategorien beim Initialisieren der Seite abrufen
+    _fetchCategories();
   }
 
   void _loadAppointments() async {
@@ -32,7 +34,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
   void _addAppointment() async {
     final description = _descriptionController.text.trim();
-    if (_selectedDay != null && description.isNotEmpty) {
+    if (_selectedDay != null && description.isNotEmpty && selectedCategory.isNotEmpty) {
       final appointmentModel =
           Provider.of<AppointmentModel>(context, listen: false);
 
@@ -46,11 +48,13 @@ class _CalendarPageState extends State<CalendarPage> {
           date: _selectedDay!,
           time: selectedTime,
           description: description,
+          category: selectedCategory,
         ));
         _saveAppointments();
         setState(() {
           _descriptionController.text = '';
           _selectedDay = null;
+          selectedCategory = '';
         });
       }
     }
@@ -77,20 +81,23 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   Future<void> _fetchCategories() async {
-    List categoriesList = [];
-
+  try {
     QuerySnapshot querySnapshot = await _firestore.collection('Termine').get();
-    for (var doc in querySnapshot.docs) {
-      categoriesList.add(doc.data());
-    }
 
-    // Hier können Sie categoriesList verwenden oder entsprechend anpassen
+    setState(() {
+      categoriesList = querySnapshot.docs
+          .map((doc) => doc['category'].toString()) // Konvertierung zu String
+          .toList();
+    });
+  } catch (e) {
+    print("Fehler beim Abrufen der Kategorien: $e");
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      // Wrap with SingleChildScrollView
       child: Padding(
         padding: const EdgeInsets.all(13.0),
         child: Column(
@@ -129,8 +136,23 @@ class _CalendarPageState extends State<CalendarPage> {
             ),
             SizedBox(height: 10),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                DropdownButton<String>(
+                  value: selectedCategory,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedCategory = newValue!;
+                    });
+                  },
+                  items: categoriesList.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  hint: Text('Kategorie auswählen'),
+                ),
+                SizedBox(width: 10),
                 ElevatedButton(
                   onPressed: _addAppointment,
                   child: Text('Termin hinzufügen'),
@@ -182,9 +204,8 @@ class _CalendarPageState extends State<CalendarPage> {
                                       color: Theme.of(context).brightness ==
                                               Brightness.dark
                                           ? const Color.fromARGB(255, 107, 107,
-                                              107) // Ändere diese Farbe nach Bedarf
-                                          : const Color.fromRGBO(0, 0, 0,
-                                              1), // Oder eine andere Farbe für den Light Mode
+                                              107)
+                                          : const Color.fromRGBO(0, 0, 0, 1),
                                     ),
                                   ),
                                   trailing: IconButton(
@@ -193,9 +214,8 @@ class _CalendarPageState extends State<CalendarPage> {
                                       color: Theme.of(context).brightness ==
                                               Brightness.dark
                                           ? const Color.fromARGB(255, 107, 107,
-                                              107) // Dark Mode Farbe hier änderbar nach Bedarf
-                                          : const Color.fromARGB(0, 0, 0,
-                                              1), // LightMode Farbe hier änderbar nach Bedarf
+                                              107)
+                                          : const Color.fromARGB(0, 0, 0, 1),
                                     ),
                                     onPressed: () =>
                                         _removeAppointment(appointment),

@@ -6,32 +6,31 @@ class Appointment {
   DateTime date;
   TimeOfDay time;
   String description;
+  String category; // Added category field
 
   Appointment({
     required this.date,
     required this.time,
     required this.description,
+    required this.category, // Added category field
   });
 
   @override
   String toString() {
-    return '$date, $time, $description';
+    return '$date, $time, $description, $category'; // Include category in toString
   }
 
   static Appointment fromString(String appointmentString) {
     final parts = appointmentString.split(', ');
     final date = DateTime.parse(parts[0]);
 
-    // Extrahiere die Uhrzeitzeichenkette und entferne führende/trailing Leerzeichen
     final timeString = parts[1]
         .replaceAll(RegExp(r'^TimeOfDay\('), '')
         .replaceAll(RegExp(r'\)$'), '')
         .trim();
 
-    // Entferne führende Nullen aus Stunden und Minuten
     final cleanedTimeString = timeString.replaceAll(RegExp('^0+'), '');
 
-    // Überprüfe, ob die Zeitzeichenkette aus Ziffern und einem Doppelpunkt besteht
     if (!RegExp(r'^\d+:\d+$').hasMatch(cleanedTimeString)) {
       throw FormatException('Ungültiges Zeitformat: $timeString');
     }
@@ -41,11 +40,13 @@ class Appointment {
       minute: int.parse(cleanedTimeString.split(':')[1]),
     );
     final description = parts[2];
+    final category = parts[3]; // Extract category
 
     return Appointment(
       date: date,
       time: time,
       description: description,
+      category: category, // Assign category
     );
   }
 }
