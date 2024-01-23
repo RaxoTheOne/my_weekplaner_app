@@ -43,7 +43,8 @@ class _HomePageState extends State<HomePage> {
           if (dateComparison != 0) {
             return dateComparison;
           }
-          return a.time.hour * 60 + a.time.minute -
+          return a.time.hour * 60 +
+              a.time.minute -
               (b.time.hour * 60 + b.time.minute);
         });
 
