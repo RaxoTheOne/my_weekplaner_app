@@ -15,10 +15,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  String _selectedLanguage = 'Deutsch';
-  String _selectedDateFormat = 'DD/MM/YYYY';
-  ThemeModeOption _selectedThemeModeOption = ThemeModeOption.System;
-
   @override
   Widget build(BuildContext context) {
     final settingsModel = Provider.of<SettingsModel>(context);
@@ -36,11 +32,10 @@ class _SettingsPageState extends State<SettingsPage> {
         ListTile(
           title: const Text('Dunkelmodus'),
           trailing: DropdownButton<ThemeModeOption>(
-            value: _selectedThemeModeOption,
+            value: settingsModel.selectedThemeModeOption,
             onChanged: (ThemeModeOption? newValue) {
               setState(() {
-                _selectedThemeModeOption = newValue!;
-                _updateThemeMode(settingsModel);
+                settingsModel.setThemeModeOption(newValue!);
               });
             },
             items: ThemeModeOption.values
@@ -52,8 +47,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   _themeModeOptionToString(value),
                   style: TextStyle(
                     color: brightness == Brightness.light
-                        ? Colors.black // Hellmodus
-                        : Colors.white, // Dunkelmodus
+                        ? Colors.black
+                        : Colors.white,
                   ),
                 ),
               );
@@ -63,10 +58,10 @@ class _SettingsPageState extends State<SettingsPage> {
         ListTile(
           title: const Text('Sprache'),
           trailing: DropdownButton<String>(
-            value: _selectedLanguage,
+            value: settingsModel.selectedLanguage,
             onChanged: (String? newValue) {
               setState(() {
-                _selectedLanguage = newValue!;
+                settingsModel.setSelectedLanguage(newValue!);
               });
             },
             items: <String>['English', 'Deutsch', 'Español', 'Français']
@@ -77,8 +72,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   value,
                   style: TextStyle(
                     color: brightness == Brightness.light
-                        ? Colors.black // Hellmodus
-                        : Colors.white, // Dunkelmodus
+                        ? Colors.black
+                        : Colors.white,
                   ),
                 ),
               );
@@ -88,10 +83,10 @@ class _SettingsPageState extends State<SettingsPage> {
         ListTile(
           title: const Text('Datumsformat'),
           trailing: DropdownButton<String>(
-            value: _selectedDateFormat,
+            value: settingsModel.selectedDateFormat,
             onChanged: (String? newValue) {
               setState(() {
-                _selectedDateFormat = newValue!;
+                settingsModel.setSelectedDateFormat(newValue!);
               });
             },
             items: <String>['DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY/MM/DD']
@@ -102,8 +97,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   value,
                   style: TextStyle(
                     color: brightness == Brightness.light
-                        ? Colors.black // Hellmodus
-                        : Colors.white, // Dunkelmodus
+                        ? Colors.black
+                        : Colors.white,
                   ),
                 ),
               );
@@ -124,32 +119,20 @@ class _SettingsPageState extends State<SettingsPage> {
         return 'System';
     }
   }
-
-  void _updateThemeMode(SettingsModel settingsModel) {
-    switch (_selectedThemeModeOption) {
-      case ThemeModeOption.Dark:
-        settingsModel.setDarkModeOn(true);
-        break;
-      case ThemeModeOption.Light:
-        settingsModel.setDarkModeOn(false);
-        break;
-      case ThemeModeOption.System:
-        // Implementiere hier die Logik, um den Dunkelmodus an das System zu binden
-        // Du kannst hier den vorigen Code verwenden, um den Dunkelmodus an das System anzupassen
-        // Achte darauf, die Helligkeitsänderungen auch im `initState` oder `didChangePlatformBrightness` zu überwachen.
-        break;
-    }
-  }
 }
 
 class SettingsModel extends ChangeNotifier {
   bool _notificationsOn = false;
   bool _darkModeOn = false;
   ThemeModeOption _selectedThemeModeOption = ThemeModeOption.System;
+  String _selectedLanguage = 'Deutsch';
+  String _selectedDateFormat = 'DD/MM/YYYY';
 
   bool get notificationsOn => _notificationsOn;
   bool get darkModeOn => _darkModeOn;
   ThemeModeOption get selectedThemeModeOption => _selectedThemeModeOption;
+  String get selectedLanguage => _selectedLanguage;
+  String get selectedDateFormat => _selectedDateFormat;
 
   void setNotificationsOn(bool value) {
     _notificationsOn = value;
@@ -160,8 +143,22 @@ class SettingsModel extends ChangeNotifier {
     _darkModeOn = value;
     _selectedThemeModeOption = value
         ? ThemeModeOption.Dark
-        : ThemeModeOption
-            .Light; // Aktualisiere die ausgewählte Dunkelmodus-Option
+        : ThemeModeOption.Light;
+    notifyListeners();
+  }
+
+  void setThemeModeOption(ThemeModeOption option) {
+    _selectedThemeModeOption = option;
+    notifyListeners();
+  }
+
+  void setSelectedLanguage(String language) {
+    _selectedLanguage = language;
+    notifyListeners();
+  }
+
+  void setSelectedDateFormat(String dateFormat) {
+    _selectedDateFormat = dateFormat;
     notifyListeners();
   }
 }

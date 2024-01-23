@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Consumer<AppointmentModel>(
       builder: (context, appointmentModel, child) {
-        List<Appointment> bevorstehendeTermine = appointmentModel.appointments
+        List<Appointment> upcomingAppointments = appointmentModel.appointments
             .where(
               (appointment) =>
                   appointment.date.month == _selectedDate.month &&
@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
             .toList();
 
         // Sortiere die Termine nach Datum und Uhrzeit
-        bevorstehendeTermine.sort((a, b) {
+        upcomingAppointments.sort((a, b) {
           final dateComparison = a.date.compareTo(b.date);
           if (dateComparison != 0) {
             return dateComparison;
@@ -52,11 +52,11 @@ class _HomePageState extends State<HomePage> {
         return Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.grey,
-            title: Text('Overview'),
+            title: Text('Übersicht'),
           ),
           body: Column(
             children: [
-              if (bevorstehendeTermine.isEmpty)
+              if (upcomingAppointments.isEmpty)
                 Expanded(
                   child: Center(
                     child: Text(
@@ -64,8 +64,8 @@ class _HomePageState extends State<HomePage> {
                       style: TextStyle(
                         fontSize: 17,
                         color: brightness == Brightness.light
-                            ? Colors.black // Hellmodus
-                            : Colors.white, // Dunkelmodus
+                            ? Colors.black
+                            : Colors.white,
                       ),
                     ),
                   ),
@@ -73,34 +73,34 @@ class _HomePageState extends State<HomePage> {
               else
                 Expanded(
                   child: ListView(
-                    children: bevorstehendeTermine.map((appointment) {
+                    children: upcomingAppointments.map((appointment) {
                       return Card(
                         color: brightness == Brightness.light
-                            ? Colors.white // Hellmodus
-                            : Colors.grey[800], // Dunkelmodus
+                            ? Colors.white
+                            : Colors.grey[800],
                         child: ListTile(
                           leading: Icon(Icons.event),
                           title: Text(
                             '${appointment.description} um ${appointment.time.format(context)}',
                             style: TextStyle(
                               color: brightness == Brightness.light
-                                  ? Colors.black // Hellmodus
-                                  : Colors.white, // Dunkelmodus
+                                  ? Colors.black
+                                  : Colors.white,
                             ),
                           ),
                           subtitle: Text(
                             '${DateFormat('yMMMd').format(appointment.date)}',
                             style: TextStyle(
                               color: brightness == Brightness.light
-                                  ? Colors.black54 // Hellmodus
-                                  : Colors.white70, // Dunkelmodus
+                                  ? Colors.black54
+                                  : Colors.white70,
                             ),
                           ),
                           trailing: IconButton(
                             icon: Icon(Icons.delete),
                             onPressed: () {
                               appointmentModel.removeAppointment(appointment);
-                              _updateInteraktionsstatus(context);
+                              _updateInteractionStatus(context);
                             },
                           ),
                         ),
@@ -115,7 +115,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<void> _updateInteraktionsstatus(BuildContext context) async {
+  Future<void> _updateInteractionStatus(BuildContext context) async {
     final appointmentModel =
         Provider.of<AppointmentModel>(context, listen: false);
     await appointmentModel.saveAppointments();
