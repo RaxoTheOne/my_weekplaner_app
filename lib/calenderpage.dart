@@ -78,7 +78,6 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      // Wrap with SingleChildScrollView
       child: Padding(
         padding: const EdgeInsets.all(13.0),
         child: Column(
@@ -106,6 +105,19 @@ class _CalendarPageState extends State<CalendarPage> {
               onPageChanged: (focusedDay) {
                 _focusedDay = focusedDay;
               },
+              calendarStyle: CalendarStyle(
+                todayDecoration: BoxDecoration(
+                  color: Colors.blueAccent,
+                  shape: BoxShape.circle,
+                ),
+                selectedDecoration: BoxDecoration(
+                  color: Colors.orangeAccent,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              headerStyle: HeaderStyle(
+                formatButtonVisible: false,
+              ),
             ),
             SizedBox(height: 10),
             TextField(
@@ -162,34 +174,33 @@ class _CalendarPageState extends State<CalendarPage> {
                       : Column(
                           children: appointmentsOnSelectedDay
                               .map(
-                                (appointment) => ListTile(
-                                  tileColor: Color.fromARGB(255, 220, 210, 204),
-                                  title: Text(
-                                    '${appointment.description} um ${appointment.time.format(context)}',
-                                    style: TextStyle(
-                                      color: Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? const Color.fromARGB(255, 107, 107,
-                                              107) // Ändere diese Farbe nach Bedarf
-                                          : const Color.fromRGBO(0, 0, 0,
-                                              1), // Oder eine andere Farbe für den Light Mode
-                                    ),
-                                  ),
-                                  trailing: IconButton(
-                                    icon: Icon(
-                                      Icons.delete,
-                                      color: Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? const Color.fromARGB(255, 107, 107,
-                                              107) // Dark Mode Farbe hier änderbar nach Bedarf
-                                          : const Color.fromARGB(0, 0, 0,
-                                              1), // LightMode Farbe hier änderbar nach Bedarf
-                                    ),
-                                    onPressed: () =>
-                                        _removeAppointment(appointment),
+                                (appointment) => Card(
+                                  color: Colors.blue, // Hintergrundfarbe ändern
+                                  elevation: 3, // Elevation für Schatten
+                                  margin: EdgeInsets.symmetric(
+                                    vertical: 5,
+                                    horizontal: 10,
                                   ),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(50),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: ListTile(
+                                    contentPadding: EdgeInsets.all(10),
+                                    title: Text(
+                                      '${appointment.description} um ${appointment.time.format(context)}',
+                                      style: TextStyle(
+                                        color: Colors.white, // Textfarbe ändern
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    trailing: IconButton(
+                                      icon: Icon(
+                                        Icons.delete,
+                                        color: Colors.white, // Iconfarbe ändern
+                                      ),
+                                      onPressed: () =>
+                                          _removeAppointment(appointment),
+                                    ),
                                   ),
                                 ),
                               )
