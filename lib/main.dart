@@ -13,7 +13,6 @@ Future<void> main() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-
     FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
   } catch (e) {
     print("Failed to initialize Firebase: $e");
