@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Stelle sicher, dass die Firestore-Abhängigkeit hinzugefügt ist
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:my_weekplaner_app/apointment_model.dart';
 import 'package:provider/provider.dart';
@@ -17,15 +17,15 @@ class _CalendarPageState extends State<CalendarPage> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   TextEditingController _descriptionController = TextEditingController();
-  FirebaseFirestore firestore = FirebaseFirestore.instance; // Firestore-Instanz hinzugefügt
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  List<String> dropdownData = <String>[]; // Daten für das Dropdown-Menü
+  List<String> dropdownData = <String>[];
 
   @override
   void initState() {
     super.initState();
     _loadAppointments();
-    _loadDropdownData(); // Neue Funktion für das Dropdown-Menü hinzugefügt
+    _loadDropdownData();
   }
 
   void _loadAppointments() async {
@@ -35,19 +35,20 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   Future<void> _loadDropdownData() async {
-  try {
-    QuerySnapshot querySnapshot =
-        await firestore.collection('Kategorien').get();
+    try {
+      QuerySnapshot querySnapshot =
+          await firestore.collection('Kategorien').get();
 
-    setState(() {
-      dropdownData = querySnapshot.docs
-          .map<String>((doc) => (doc['Kategorien'] as dynamic).toString())
-          .toList();
-    });
-  } catch (e) {
-    print("Fehler beim Abrufen von Firestore-Daten für Dropdown-Menü: $e");
+      setState(() {
+        dropdownData = querySnapshot.docs
+            .map<String>((doc) =>
+                (doc['Kategorien'] as dynamic)?.toString() ?? "")
+            .toList();
+      });
+    } catch (e) {
+      print("Fehler beim Abrufen von Firestore-Daten für Dropdown-Menü: $e");
+    }
   }
-}
 
   void _addAppointment() async {
     final description = _descriptionController.text.trim();
@@ -195,8 +196,8 @@ class _CalendarPageState extends State<CalendarPage> {
                           children: appointmentsOnSelectedDay
                               .map(
                                 (appointment) => Card(
-                                  color: Colors.blue, // Hintergrundfarbe ändern
-                                  elevation: 3, // Elevation für Schatten
+                                  color: Colors.blue,
+                                  elevation: 3,
                                   margin: EdgeInsets.symmetric(
                                     vertical: 5,
                                     horizontal: 10,
@@ -209,14 +210,14 @@ class _CalendarPageState extends State<CalendarPage> {
                                     title: Text(
                                       '${appointment.description} um ${appointment.time.format(context)}',
                                       style: TextStyle(
-                                        color: Colors.white, // Textfarbe ändern
+                                        color: Colors.white,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                     trailing: IconButton(
                                       icon: Icon(
                                         Icons.delete,
-                                        color: Colors.white, // Iconfarbe ändern
+                                        color: Colors.white,
                                       ),
                                       onPressed: () =>
                                           _removeAppointment(appointment),
@@ -230,18 +231,21 @@ class _CalendarPageState extends State<CalendarPage> {
               ),
             SizedBox(height: 10),
 
-            // Dropdown-Menü hinzugefügt
-            DropdownButton<String>(
-              items: dropdownData.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (String? selectedValue) {
-                // Hier kannst du die Auswahl aus dem Dropdown-Menü verarbeiten
-              },
-              hint: Text('Wähle eine Kategorie aus'),
+            // Dropdown-Menü separat platzieren
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: DropdownButton<String>(
+                items: dropdownData.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? selectedValue) {
+                  // Hier kannst du die Auswahl aus dem Dropdown-Menü verarbeiten
+                },
+                hint: Text('Wähle eine Kategorie aus'),
+              ),
             ),
           ],
         ),
