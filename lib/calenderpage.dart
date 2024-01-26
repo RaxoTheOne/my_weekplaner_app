@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Stelle sicher, dass die Firestore-Abhängigkeit hinzugefügt ist
 import 'package:intl/intl.dart';
 import 'package:my_weekplaner_app/apointment_model.dart';
 import 'package:provider/provider.dart';
@@ -16,11 +17,15 @@ class _CalendarPageState extends State<CalendarPage> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   TextEditingController _descriptionController = TextEditingController();
+  FirebaseFirestore firestore = FirebaseFirestore.instance; // Firestore-Instanz hinzugefügt
+
+  List<String> dropdownData = <String>[]; // Daten für das Dropdown-Menü
 
   @override
   void initState() {
     super.initState();
     _loadAppointments();
+    _loadDropdownData(); // Neue Funktion für das Dropdown-Menü hinzugefügt
   }
 
   void _loadAppointments() async {
@@ -28,6 +33,21 @@ class _CalendarPageState extends State<CalendarPage> {
         Provider.of<AppointmentModel>(context, listen: false);
     await appointmentModel.loadAppointments();
   }
+
+  Future<void> _loadDropdownData() async {
+  try {
+    QuerySnapshot querySnapshot =
+        await firestore.collection('Kategorien').get();
+
+    setState(() {
+      dropdownData = querySnapshot.docs
+          .map<String>((doc) => (doc['Kategorien'] as dynamic)?.toString() ?? "")
+          .toList();
+    });
+  } catch (e) {
+    print("Fehler beim Abrufen von Firestore-Daten für Dropdown-Menü: $e");
+  }
+}
 
   void _addAppointment() async {
     final description = _descriptionController.text.trim();
@@ -208,6 +228,21 @@ class _CalendarPageState extends State<CalendarPage> {
                         );
                 },
               ),
+            SizedBox(height: 10),
+
+            // Dropdown-Menü hinzugefügt
+            DropdownButton<String>(
+              items: dropdownData.map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              onChanged: (String? selectedValue) {
+                // Hier kannst du die Auswahl aus dem Dropdown-Menü verarbeiten
+              },
+              hint: Text('Wähle einen Wert aus'),
+            ),
           ],
         ),
       ),
