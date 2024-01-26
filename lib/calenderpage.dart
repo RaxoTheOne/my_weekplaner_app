@@ -41,7 +41,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
     setState(() {
       dropdownData = querySnapshot.docs
-          .map<String>((doc) => (doc['1'], doc['2'], doc['3'], doc['4'] as dynamic).toString())
+          .map<String>((doc) => (doc['Kategorien'] as dynamic).toString())
           .toList();
     });
   } catch (e) {
@@ -241,7 +241,7 @@ class _CalendarPageState extends State<CalendarPage> {
               onChanged: (String? selectedValue) {
                 // Hier kannst du die Auswahl aus dem Dropdown-Menü verarbeiten
               },
-              hint: Text('Wähle einen Wert aus'),
+              hint: Text('Wähle eine Kategorie aus'),
             ),
           ],
         ),
