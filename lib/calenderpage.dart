@@ -144,7 +144,7 @@ class _CalendarPageState extends State<CalendarPage> {
             TextField(
               controller: _descriptionController,
               decoration: InputDecoration(
-                labelText: 'Terminbeschreibung',
+                labelText: 'Event/Terminbeschreibung',
                 border: OutlineInputBorder(),
               ),
             ),
