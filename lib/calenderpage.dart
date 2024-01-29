@@ -102,7 +102,7 @@ class _CalendarPageState extends State<CalendarPage> {
       child: Padding(
         padding: const EdgeInsets.all(13.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             TableCalendar(
               firstDay: DateTime.utc(2010, 10, 16),
@@ -146,6 +146,25 @@ class _CalendarPageState extends State<CalendarPage> {
               decoration: InputDecoration(
                 labelText: 'Event/Terminbeschreibung',
                 border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 10),
+            // Dropdown-Menü zentriert anzeigen
+            Center(
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: DropdownButton<String>(
+                  items: dropdownData.map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (String? selectedValue) {
+                    // Hier kannst du die Auswahl aus dem Dropdown-Menü verarbeiten
+                  },
+                  hint: Text('Wähle eine Kategorie aus'),
+                ),
               ),
             ),
             SizedBox(height: 10),
@@ -230,23 +249,6 @@ class _CalendarPageState extends State<CalendarPage> {
                 },
               ),
             SizedBox(height: 10),
-
-            // Dropdown-Menü separat platzieren
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: DropdownButton<String>(
-                items: dropdownData.map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: (String? selectedValue) {
-                  // Hier kannst du die Auswahl aus dem Dropdown-Menü verarbeiten
-                },
-                hint: Text('Wähle eine Kategorie aus'),
-              ),
-            ),
           ],
         ),
       ),
