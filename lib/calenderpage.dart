@@ -219,7 +219,7 @@ class _CalendarPageState extends State<CalendarPage> {
                           children: appointmentsOnSelectedDay
                               .map(
                                 (appointment) => Card(
-                                  color: Colors.blue,
+                                  color: Colors.blueAccent,
                                   elevation: 3,
                                   margin: EdgeInsets.symmetric(
                                     vertical: 5,
