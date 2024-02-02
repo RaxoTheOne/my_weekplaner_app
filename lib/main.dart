@@ -1,10 +1,10 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:my_weekplaner_app/apointment_model.dart';
-import 'package:my_weekplaner_app/firebase_options.dart';
-import 'package:my_weekplaner_app/settingspage.dart';
-import 'package:my_weekplaner_app/splashscreen.dart';
+import 'package:my_weekplaner_app/Data/apointment_model.dart';
+import 'package:my_weekplaner_app/Data/firebase_options.dart';
+import 'package:my_weekplaner_app/Presentation/settingspage.dart';
+import 'package:my_weekplaner_app/Widgets/splashscreen.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
@@ -21,15 +21,15 @@ Future<void> main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => SettingsModel()),
-        ChangeNotifierProvider(create: (context) => AppointmentModel()),
+        ChangeNotifierProvider(create: (context) => AppointmentLogic()),
       ],
-      child: const MeineApp(),
+      child: const MyApp(),
     ),
   );
 }
 
-class MeineApp extends StatelessWidget {
-  const MeineApp({Key? key}) : super(key: key);
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

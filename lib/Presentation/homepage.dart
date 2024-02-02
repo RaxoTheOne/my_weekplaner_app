@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:my_weekplaner_app/apointment_model.dart';
+import 'package:my_weekplaner_app/Data/apointment_model.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -21,13 +21,13 @@ class _HomePageState extends State<HomePage> {
 
   void _loadAppointments() async {
     final appointmentModel =
-        Provider.of<AppointmentModel>(context, listen: false);
+        Provider.of<AppointmentLogic>(context, listen: false);
     await appointmentModel.loadAppointments();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AppointmentModel>(
+    return Consumer<AppointmentLogic>(
       builder: (context, appointmentModel, child) {
         List<Appointment> upcomingAppointments = appointmentModel.appointments
             .where(
@@ -118,7 +118,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _updateInteractionStatus(BuildContext context) async {
     final appointmentModel =
-        Provider.of<AppointmentModel>(context, listen: false);
+        Provider.of<AppointmentLogic>(context, listen: false);
     await appointmentModel.saveAppointments();
   }
 }

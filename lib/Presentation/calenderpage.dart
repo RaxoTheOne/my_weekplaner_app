@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:my_weekplaner_app/apointment_model.dart';
+import 'package:my_weekplaner_app/Data/apointment_model.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -30,7 +30,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
   void _loadAppointments() async {
     final appointmentModel =
-        Provider.of<AppointmentModel>(context, listen: false);
+        Provider.of<AppointmentLogic>(context, listen: false);
     await appointmentModel.loadAppointments();
   }
 
@@ -54,7 +54,7 @@ class _CalendarPageState extends State<CalendarPage> {
     final description = _descriptionController.text.trim();
     if (_selectedDay != null && description.isNotEmpty) {
       final appointmentModel =
-          Provider.of<AppointmentModel>(context, listen: false);
+          Provider.of<AppointmentLogic>(context, listen: false);
 
       final selectedTime = await showTimePicker(
         context: context,
@@ -78,21 +78,21 @@ class _CalendarPageState extends State<CalendarPage> {
 
   void _removeAppointmentsOnDate(DateTime date) {
     final appointmentModel =
-        Provider.of<AppointmentModel>(context, listen: false);
+        Provider.of<AppointmentLogic>(context, listen: false);
     appointmentModel.removeAppointmentsOnDate(date);
     _saveAppointments();
   }
 
   void _removeAppointment(Appointment appointment) {
     final appointmentModel =
-        Provider.of<AppointmentModel>(context, listen: false);
+        Provider.of<AppointmentLogic>(context, listen: false);
     appointmentModel.removeAppointment(appointment);
     _saveAppointments();
   }
 
   Future<void> _saveAppointments() async {
     final appointmentModel =
-        Provider.of<AppointmentModel>(context, listen: false);
+        Provider.of<AppointmentLogic>(context, listen: false);
     await appointmentModel.saveAppointments();
   }
 
@@ -155,7 +155,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    DropdownButton<String>(
+                    DropdownButtonFormField<String>(
                       items: dropdownData.map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
@@ -200,7 +200,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             if (_selectedDay != null)
-              Consumer<AppointmentModel>(
+              Consumer<AppointmentLogic>(
                 builder: (context, appointmentModel, child) {
                   final appointmentsOnSelectedDay = appointmentModel
                       .appointments

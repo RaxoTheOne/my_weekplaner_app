@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:my_weekplaner_app/calenderpage.dart';
-import 'package:my_weekplaner_app/homepage.dart';
-import 'package:my_weekplaner_app/settingspage.dart';
+import 'package:my_weekplaner_app/Presentation/calenderpage.dart';
+import 'package:my_weekplaner_app/Presentation/homepage.dart';
+import 'package:my_weekplaner_app/Presentation/settingspage.dart';
 
-class MeinHomebildschirm extends StatefulWidget {
-  const MeinHomebildschirm({Key? key}) : super(key: key);
+class MyHomescreen extends StatefulWidget {
+  const MyHomescreen({Key? key}) : super(key: key);
 
   @override
-  _MeinHomebildschirmState createState() => _MeinHomebildschirmState();
+  _MyHomescreenState createState() => _MyHomescreenState();
 }
 
-class _MeinHomebildschirmState extends State<MeinHomebildschirm> {
+class _MyHomescreenState extends State<MyHomescreen> {
   int _selectedIndex = 0;
   static List<Widget> _widgetOptions = <Widget>[
     HomePage(),

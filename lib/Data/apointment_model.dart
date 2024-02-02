@@ -47,7 +47,7 @@ class Appointment {
   }
 }
 
-class AppointmentModel extends ChangeNotifier {
+class AppointmentLogic extends ChangeNotifier {
   List<Appointment> _appointments = [];
 
   List<Appointment> get appointments => _appointments;

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:my_weekplaner_app/app.dart';
+import 'package:my_weekplaner_app/Widgets/bottom_navigation.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -17,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
       // Navigiert zur nächsten Seite
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => MeinHomebildschirm(),
+          builder: (context) => MyHomescreen(),
         ),
       );
     });
