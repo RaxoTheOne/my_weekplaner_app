@@ -21,6 +21,7 @@ class _CalendarPageState extends State<CalendarPage> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   List<String> dropdownData = <String>[];
+  String? _selectedCategory; // Variable für die ausgewählte Kategorie
 
   @override
   void initState() {
@@ -44,7 +45,8 @@ class _CalendarPageState extends State<CalendarPage> {
       setState(() {
         dropdownData = querySnapshot.docs
             .map<String>((doc) =>
-                (doc['name'] as dynamic)?.toString() ?? "") // Name des Feldes in Firestore anpassen
+                (doc['name'] as dynamic)?.toString() ??
+                "") // Name des Feldes in Firestore anpassen
             .toList();
       });
     } catch (e) {
@@ -54,25 +56,41 @@ class _CalendarPageState extends State<CalendarPage> {
 
   void _addAppointment() async {
     final description = _descriptionController.text.trim();
-    if (_selectedDay != null && description.isNotEmpty) {
-      final appointmentModel =
-          Provider.of<AppointmentLogic>(context, listen: false);
+    final appointmentModel =
+        Provider.of<AppointmentLogic>(context, listen: false);
 
+    if (_selectedDay != null) {
       final selectedTime = await showTimePicker(
         context: context,
         initialTime: TimeOfDay.now(),
       );
 
       if (selectedTime != null) {
+        String appointmentDescription;
+
+        // Überprüfe, ob das Textfeld leer ist
+        if (description.isNotEmpty) {
+          appointmentDescription = description;
+        } else if (_selectedCategory != null) {
+          appointmentDescription = _selectedCategory!;
+        } else {
+          appointmentDescription =
+              ''; // Setze die Beschreibung auf leer, wenn beide leer sind
+        }
+
         appointmentModel.addAppointment(Appointment(
           date: _selectedDay!,
           time: selectedTime,
-          description: description,
+          description: appointmentDescription,
+          category: _selectedCategory ??
+              '', // Verwende die ausgewählte Kategorie oder leer, wenn keine ausgewählt ist
         ));
         _saveAppointments();
         setState(() {
           _descriptionController.text = '';
           _selectedDay = null;
+          _selectedCategory =
+              null; // Zurücksetzen der ausgewählten Kategorie nach dem Hinzufügen
         });
       }
     }
@@ -102,7 +120,8 @@ class _CalendarPageState extends State<CalendarPage> {
   void fetchCategoriesFromFirestore() {
     FirebaseFirestore.instance.collection('Kategorien').get().then((snapshot) {
       snapshot.docs.forEach((doc) {
-        print('Kategorie: ${doc['name']}, Beschreibung: ${doc['beschreibung']}');
+        print(
+            'Kategorie: ${doc['name']}, Beschreibung: ${doc['beschreibung']}');
       });
     });
   }
@@ -162,13 +181,19 @@ class _CalendarPageState extends State<CalendarPage> {
             SizedBox(height: 10),
             Center(
               child: DropdownButtonFormField<String>(
+                value: _selectedCategory, // Hinzugefügt
                 items: dropdownData.map((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),
                   );
                 }).toList(),
-                onChanged: (String? selcetedValue) {},
+                onChanged: (String? selectedValue) {
+                  setState(() {
+                    _selectedCategory =
+                        selectedValue; // Speichere die ausgewählte Kategorie
+                  });
+                },
                 hint: Text('Wähle eine Kategorie aus'),
               ),
             ),
