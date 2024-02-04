@@ -1,10 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:my_weekplaner_app/Application/apointment_logic.dart';
 import 'package:my_weekplaner_app/Data/apointment_model.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({Key? key}) : super(key: key);
@@ -27,6 +27,7 @@ class _CalendarPageState extends State<CalendarPage> {
     super.initState();
     _loadAppointments();
     _loadDropdownData();
+    fetchCategoriesFromFirestore();
   }
 
   void _loadAppointments() async {
@@ -42,8 +43,8 @@ class _CalendarPageState extends State<CalendarPage> {
 
       setState(() {
         dropdownData = querySnapshot.docs
-            .map<String>(
-                (doc) => (doc['Kategorien'] as dynamic)?.toString() ?? "")
+            .map<String>((doc) =>
+                (doc['name'] as dynamic)?.toString() ?? "") // Name des Feldes in Firestore anpassen
             .toList();
       });
     } catch (e) {
@@ -95,6 +96,15 @@ class _CalendarPageState extends State<CalendarPage> {
     final appointmentModel =
         Provider.of<AppointmentLogic>(context, listen: false);
     await appointmentModel.saveAppointments();
+  }
+
+  // Daten aus Firestore abrufen
+  void fetchCategoriesFromFirestore() {
+    FirebaseFirestore.instance.collection('Kategorien').get().then((snapshot) {
+      snapshot.docs.forEach((doc) {
+        print('Kategorie: ${doc['name']}, Beschreibung: ${doc['beschreibung']}');
+      });
+    });
   }
 
   @override
@@ -151,25 +161,15 @@ class _CalendarPageState extends State<CalendarPage> {
             ),
             SizedBox(height: 10),
             Center(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    DropdownButtonFormField<String>(
-                      items: dropdownData.map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (String? selectedValue) {
-                        // Hier kannst du die Auswahl aus dem Dropdown-Menü verarbeiten
-                      },
-                      hint: Text('Wähle eine Kategorie aus'),
-                    ),
-                  ],
-                ),
+              child: DropdownButtonFormField<String>(
+                items: dropdownData.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? selcetedValue) {},
+                hint: Text('Wähle eine Kategorie aus'),
               ),
             ),
             SizedBox(height: 10),
@@ -219,33 +219,37 @@ class _CalendarPageState extends State<CalendarPage> {
                       : Column(
                           children: appointmentsOnSelectedDay
                               .map(
-                                (appointment) => Card(
-                                  color: Colors.blueAccent,
-                                  elevation: 3,
+                                (appointment) => Container(
                                   margin: EdgeInsets.symmetric(
-                                    vertical: 5,
-                                    horizontal: 10,
-                                  ),
-                                  shape: RoundedRectangleBorder(
+                                      vertical: 5, horizontal: 10),
+                                  padding: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                    color: Colors.blueAccent,
                                     borderRadius: BorderRadius.circular(10),
                                   ),
-                                  child: ListTile(
-                                    contentPadding: EdgeInsets.all(10),
-                                    title: Text(
-                                      '${appointment.description} um ${appointment.time.format(context)}',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Flexible(
+                                        child: Text(
+                                          '${appointment.description} um ${appointment.time.format(context)}',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
                                       ),
-                                    ),
-                                    trailing: IconButton(
-                                      icon: Icon(
-                                        Icons.delete,
-                                        color: Colors.white,
+                                      IconButton(
+                                        icon: Icon(
+                                          Icons.delete,
+                                          color: Colors.white,
+                                        ),
+                                        onPressed: () =>
+                                            _removeAppointment(appointment),
                                       ),
-                                      onPressed: () =>
-                                          _removeAppointment(appointment),
-                                    ),
+                                    ],
                                   ),
                                 ),
                               )
