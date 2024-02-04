@@ -2,6 +2,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:my_weekplaner_app/Application/apointment_logic.dart';
+import 'package:my_weekplaner_app/Application/settings_logic.dart';
 import 'package:my_weekplaner_app/Data/firebase_options.dart';
 import 'package:my_weekplaner_app/Presentation/settingspage.dart';
 import 'package:my_weekplaner_app/Widgets/splashscreen.dart';
@@ -20,7 +21,7 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => SettingsModel()),
+        ChangeNotifierProvider(create: (context) => SettingsLogic()),
         ChangeNotifierProvider(create: (context) => AppointmentLogic()),
       ],
       child: const MyApp(),
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SettingsModel>(
+    return Consumer<SettingsLogic>(
       builder: (context, settingsModel, child) {
         return MaterialApp(
           title: 'My Weekplaner-App',
@@ -44,7 +45,7 @@ class MyApp extends StatelessWidget {
     );
   }
 
-  ThemeData _buildThemeData(BuildContext context, SettingsModel settingsModel) {
+  ThemeData _buildThemeData(BuildContext context, SettingsLogic settingsModel) {
     // Aktuellen Brightness-Modus abrufen (Dark oder Light)
     final brightness = MediaQuery.of(context).platformBrightness;
 
