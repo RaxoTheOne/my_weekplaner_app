@@ -36,9 +36,15 @@ class AppointmentLogic extends ChangeNotifier {
     final savedAppointments = prefs.getStringList('appointments');
 
     if (savedAppointments != null) {
-      _appointments = savedAppointments
-          .map((appointmentString) => Appointment.fromString(appointmentString))
-          .toList();
+      _appointments = [];
+      for (final appointmentString in savedAppointments) {
+        try {
+          final appointment = Appointment.fromString(appointmentString);
+          _appointments.add(appointment);
+        } catch (e) {
+          print('Fehler beim Laden des Termins: $e');
+        }
+      }
       notifyListeners();
     }
   }
