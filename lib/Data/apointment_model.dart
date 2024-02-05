@@ -8,7 +8,8 @@ class Appointment {
   Appointment({
     required this.date,
     required this.time,
-    required this.description, required String category,
+    required this.description,
+    required String category,
   });
 
   @override
@@ -40,9 +41,8 @@ class Appointment {
     return Appointment(
       date: date,
       time: time,
-      description: description, category: '',
+      description: description,
+      category: '',
     );
   }
 }
-
-
