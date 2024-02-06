@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_weekplaner_app/Application/settings_logic.dart';
+import 'package:my_weekplaner_app/application/settings_logic.dart';
 import 'package:provider/provider.dart';
 
 enum ThemeModeOption {

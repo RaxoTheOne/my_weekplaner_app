@@ -30,7 +30,7 @@ flutter_native_splash:
   image_dark: "assets/_cf771525-d194-4742-9e45-a413a6604178.jpeg"  # Pfad zum Bild im Dark Mode
   fit: BoxFit.cover
 
-flutter_icons:
+flutter_launcher_icons:
   android: true
   ios: true
   image_path: assets/icons/App-Icon.png

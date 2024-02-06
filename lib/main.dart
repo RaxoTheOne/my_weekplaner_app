@@ -1,11 +1,11 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:my_weekplaner_app/Application/apointment_logic.dart';
-import 'package:my_weekplaner_app/Application/settings_logic.dart';
-import 'package:my_weekplaner_app/Data/firebase_options.dart';
-import 'package:my_weekplaner_app/Presentation/settingspage.dart';
-import 'package:my_weekplaner_app/Widgets/splashscreen.dart';
+import 'package:my_weekplaner_app/application/apointment_logic.dart';
+import 'package:my_weekplaner_app/application/settings_logic.dart';
+import 'package:my_weekplaner_app/data/firebase_options.dart';
+import 'package:my_weekplaner_app/presentation/settingspage.dart';
+import 'package:my_weekplaner_app/widgets/splashscreen.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {

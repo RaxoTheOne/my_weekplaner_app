@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_weekplaner_app/Presentation/settingspage.dart';
+import 'package:my_weekplaner_app/presentation/settingspage.dart';
 
 class SettingsLogic extends ChangeNotifier {
   bool _notificationsOn = false;
