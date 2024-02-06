@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:my_weekplaner_app/Widgets/bottom_navigation.dart';
+import 'package:my_weekplaner_app/widgets/bottom_navigation.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
