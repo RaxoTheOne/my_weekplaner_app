@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_weekplaner_app/Data/apointment_model.dart';
+import 'package:my_weekplaner_app/data/apointment_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 

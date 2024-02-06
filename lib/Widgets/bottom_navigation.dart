@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:my_weekplaner_app/Presentation/calenderpage.dart';
-import 'package:my_weekplaner_app/Presentation/homepage.dart';
-import 'package:my_weekplaner_app/Presentation/settingspage.dart';
+import 'package:my_weekplaner_app/presentation/calenderpage.dart';
+import 'package:my_weekplaner_app/presentation/homepage.dart';
+import 'package:my_weekplaner_app/presentation/settingspage.dart';
 
 class MyHomescreen extends StatefulWidget {
   const MyHomescreen({Key? key}) : super(key: key);
