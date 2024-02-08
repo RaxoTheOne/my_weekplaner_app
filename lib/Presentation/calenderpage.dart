@@ -55,44 +55,43 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   void _addAppointment() async {
-  final description = _descriptionController.text.trim();
-  final appointmentModel =
-      Provider.of<AppointmentLogic>(context, listen: false);
+    final description = _descriptionController.text.trim();
+    final appointmentModel =
+        Provider.of<AppointmentLogic>(context, listen: false);
 
-  if (_selectedDay != null) {
-    final selectedTime = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
+    if (_selectedDay != null) {
+      final selectedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+      );
 
-    if (selectedTime != null) {
-      String appointmentDescription;
+      if (selectedTime != null) {
+        String appointmentDescription;
 
-      // Überprüfe, ob das Textfeld leer ist
-      if (description.isNotEmpty) {
-        appointmentDescription = description;
-      } else if (_selectedCategory != null) {
-        appointmentDescription = _selectedCategory!;
-      } else {
-        appointmentDescription = ''; // Setze die Beschreibung auf leer, wenn beide leer sind
+        // Überprüfe, ob das Textfeld leer ist
+        if (description.isNotEmpty) {
+          appointmentDescription = description;
+        } else if (_selectedCategory != null) {
+          appointmentDescription = _selectedCategory!;
+        } else {
+          appointmentDescription = ''; // Setze die Beschreibung auf leer, wenn beide leer sind
+        }
+
+        appointmentModel.addAppointment(Appointment(
+          date: _selectedDay!,
+          time: selectedTime,
+          description: appointmentDescription,
+          category: _selectedCategory ?? '', // Verwende die ausgewählte Kategorie oder leer, wenn keine ausgewählt ist
+        ));
+        _saveAppointments();
+        setState(() {
+          _descriptionController.text = '';
+          _selectedDay = null;
+          _selectedCategory = null; // Zurücksetzen der ausgewählten Kategorie nach dem Hinzufügen
+        });
       }
-
-      appointmentModel.addAppointment(Appointment(
-        date: _selectedDay!,
-        time: selectedTime,
-        description: appointmentDescription,
-        category: _selectedCategory ?? '', // Verwende die ausgewählte Kategorie oder leer, wenn keine ausgewählt ist
-      ));
-      _saveAppointments();
-      setState(() {
-        _descriptionController.text = '';
-        _selectedDay = null;
-        _selectedCategory = null; // Zurücksetzen der ausgewählten Kategorie nach dem Hinzufügen
-      });
     }
   }
-}
-
 
   void _removeAppointmentsOnDate(DateTime date) {
     final appointmentModel =
@@ -163,7 +162,11 @@ class _CalendarPageState extends State<CalendarPage> {
                   color: Colors.orangeAccent,
                   shape: BoxShape.circle,
                 ),
+                // Hier die Größe des Kalenders anpassen
+                cellMargin: EdgeInsets.all(0),
+                outsideDaysVisible: false,
               ),
+              rowHeight: 35,
               headerStyle: HeaderStyle(
                 formatButtonVisible: false,
               ),
