@@ -74,20 +74,23 @@ class _CalendarPageState extends State<CalendarPage> {
         } else if (_selectedCategory != null) {
           appointmentDescription = _selectedCategory!;
         } else {
-          appointmentDescription = ''; // Setze die Beschreibung auf leer, wenn beide leer sind
+          appointmentDescription =
+              ''; // Setze die Beschreibung auf leer, wenn beide leer sind
         }
 
         appointmentModel.addAppointment(Appointment(
           date: _selectedDay!,
           time: selectedTime,
           description: appointmentDescription,
-          category: _selectedCategory ?? '', // Verwende die ausgewählte Kategorie oder leer, wenn keine ausgewählt ist
+          category: _selectedCategory ??
+              '', // Verwende die ausgewählte Kategorie oder leer, wenn keine ausgewählt ist
         ));
         _saveAppointments();
         setState(() {
           _descriptionController.text = '';
           _selectedDay = null;
-          _selectedCategory = null; // Zurücksetzen der ausgewählten Kategorie nach dem Hinzufügen
+          _selectedCategory =
+              null; // Zurücksetzen der ausgewählten Kategorie nach dem Hinzufügen
         });
       }
     }
