@@ -29,7 +29,7 @@ class _MyHomescreenState extends State<MyHomescreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Weekplaner'),
-        backgroundColor:  const Color.fromARGB(204, 175, 165, 165),
+        backgroundColor:  const Color.fromARGB(204, 175, 165, 165), // Hintergrundfarbe der AppBar
       ),
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
