@@ -13,7 +13,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     // Startet die Animation nach einer Verzögerung von 3 Sekunden
-    Timer(Duration(seconds: 2), () {
+    Timer(Duration(seconds: 3), () {
       // Navigiert zur nächsten Seite
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
