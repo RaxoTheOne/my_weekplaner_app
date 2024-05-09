@@ -35,6 +35,7 @@ class MyApp extends StatelessWidget {
     return Consumer<SettingsLogic>(
       builder: (context, settingsModel, child) {
         return MaterialApp(
+          debugShowCheckedModeBanner: false,
           title: 'My Weekplaner-App',
           theme: _buildThemeData(context, settingsModel),
           home: SplashScreen(),
